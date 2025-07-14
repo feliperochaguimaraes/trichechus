@@ -1,0 +1,11 @@
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\bin\Debug\net8.0\Trichechus.Domain.deps.json
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\bin\Debug\net8.0\Trichechus.Domain.dll
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\bin\Debug\net8.0\Trichechus.Domain.pdb
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\obj\Debug\net8.0\Trichechus.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\obj\Debug\net8.0\Trichechus.Domain.AssemblyInfoInputs.cache
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\obj\Debug\net8.0\Trichechus.Domain.AssemblyInfo.cs
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\obj\Debug\net8.0\Trichechus.Domain.csproj.CoreCompileInputs.cache
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\obj\Debug\net8.0\Trichechus.Domain.dll
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\obj\Debug\net8.0\refint\Trichechus.Domain.dll
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\obj\Debug\net8.0\Trichechus.Domain.pdb
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\obj\Debug\net8.0\ref\Trichechus.Domain.dll

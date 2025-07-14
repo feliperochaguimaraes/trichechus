@@ -1,0 +1,17 @@
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\bin\Debug\net8.0\Trichechus.Persistence.deps.json
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\bin\Debug\net8.0\Trichechus.Persistence.runtimeconfig.json
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\bin\Debug\net8.0\Trichechus.Persistence.dll
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\bin\Debug\net8.0\Trichechus.Persistence.pdb
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\bin\Debug\net8.0\Trichechus.Domain.dll
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\bin\Debug\net8.0\Trichechus.Domain.pdb
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\Trichechus.Persistence.csproj.AssemblyReference.cache
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\Trichechus.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\Trichechus.Persistence.AssemblyInfoInputs.cache
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\Trichechus.Persistence.AssemblyInfo.cs
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\Trichechus.Persistence.csproj.CoreCompileInputs.cache
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\Trichech.AA4CDE05.Up2Date
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\Trichechus.Persistence.dll
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\refint\Trichechus.Persistence.dll
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\Trichechus.Persistence.pdb
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\Trichechus.Persistence.genruntimeconfig.cache
+C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Persistence\obj\Debug\net8.0\ref\Trichechus.Persistence.dll

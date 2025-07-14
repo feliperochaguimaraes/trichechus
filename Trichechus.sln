@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trichechus.API", "Trichechus.API\Trichechus.API.csproj", "{E6A650E1-792D-4640-9AF6-CECC726721FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trichechus.Application", "Trichechus.Application\Trichechus.Application.csproj", "{0FE23C2D-C3DA-4194-8FF2-4F26044E8819}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trichechus.Domain", "Trichechus.Domain\Trichechus.Domain.csproj", "{EB576346-9D0D-4BAA-BE7A-0CD46660658D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trichechus.Infrastructure", "Trichechus.Infrastructure\Trichechus.Infrastructure.csproj", "{B10B3A1D-9C50-4E37-BF61-72CB3978467F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6A650E1-792D-4640-9AF6-CECC726721FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6A650E1-792D-4640-9AF6-CECC726721FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6A650E1-792D-4640-9AF6-CECC726721FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6A650E1-792D-4640-9AF6-CECC726721FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FE23C2D-C3DA-4194-8FF2-4F26044E8819}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FE23C2D-C3DA-4194-8FF2-4F26044E8819}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FE23C2D-C3DA-4194-8FF2-4F26044E8819}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FE23C2D-C3DA-4194-8FF2-4F26044E8819}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB576346-9D0D-4BAA-BE7A-0CD46660658D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB576346-9D0D-4BAA-BE7A-0CD46660658D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB576346-9D0D-4BAA-BE7A-0CD46660658D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB576346-9D0D-4BAA-BE7A-0CD46660658D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B10B3A1D-9C50-4E37-BF61-72CB3978467F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B10B3A1D-9C50-4E37-BF61-72CB3978467F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B10B3A1D-9C50-4E37-BF61-72CB3978467F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B10B3A1D-9C50-4E37-BF61-72CB3978467F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
