@@ -1,7 +1,6 @@
+**/obj/
+**/bin/
+**/Properties/
 /.vscode
 /src
 /publicar-trichechus.bat
-Trichechus.Domain/obj/
-/Trichechus.Domain/bin/
-Trichechus.Infrastructure/obj/*
-./Trichechus.Infrastructure/bin/
