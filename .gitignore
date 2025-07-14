@@ -1,2 +1,4 @@
 /.vscode
 /publicar-trichechus.bat
+/Trichechus.Infrastructure/obj
+/Trichechus.Domain/obj
