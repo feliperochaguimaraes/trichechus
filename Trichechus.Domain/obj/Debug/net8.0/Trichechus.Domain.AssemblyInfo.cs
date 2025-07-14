@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Trichechus.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64d37a6f127ae6fb2dfa8f7ab98ff5b8ddee7ee4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Trichechus.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Trichechus.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

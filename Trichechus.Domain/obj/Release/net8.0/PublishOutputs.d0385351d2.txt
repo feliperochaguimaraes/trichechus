@@ -1,3 +1,0 @@
-C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\bin\Release\net8.0\publish\Trichechus.Domain.dll
-C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\bin\Release\net8.0\publish\Trichechus.Domain.deps.json
-C:\Projetos\arquiteturaFrontend\trichechus\Trichechus.Domain\bin\Release\net8.0\publish\Trichechus.Domain.pdb

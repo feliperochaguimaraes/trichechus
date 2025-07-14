@@ -1,3 +1,0 @@
-C:\Projetos\inetpub\wwwroot\trichechus\'\Trichechus.Domain.dll
-C:\Projetos\inetpub\wwwroot\trichechus\'\Trichechus.Domain.deps.json
-C:\Projetos\inetpub\wwwroot\trichechus\'\Trichechus.Domain.pdb
