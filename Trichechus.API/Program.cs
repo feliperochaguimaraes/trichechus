@@ -24,7 +24,8 @@ builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowFrontend",
 		policy => policy
-			.WithOrigins("http://localhost:5116") // Porta do seu frontend
+			.WithOrigins("http://localhost:5116","http://10.0.20.34:5116") // Porta do seu frontend
+
 			// .AllowAnyOrigin() //PARA DEV
 			.AllowAnyHeader()
 			.AllowAnyMethod()
@@ -149,7 +150,7 @@ builder.Services.AddSwaggerGen(c =>
 	{
 		Title = "Trichechus API",
 		Version = "v1",
-		Description = "API para gerenciamento de atividades e tarefas do Sistema Trichechus",
+		Description = "API para gerenciamento de atividades e tarefas do Sistema Trichechus - " + builder.Configuration.GetValue<string>("AMBIENTE")!.ToString(),
 		Contact = new OpenApiContact
 		{
 			Name = "Luis Felipe Rocha Guimarães",
@@ -179,7 +180,7 @@ if (app.Environment.IsProduction())
 	{
 		c.SwaggerEndpoint("/trichechus/swagger/v1/swagger.json", "Trichechus API v1");
 		c.RoutePrefix = string.Empty; // Para servir a UI do Swagger na raiz
-		c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+		c.DocExpansion(DocExpansion.None);
 		c.DefaultModelsExpandDepth(-1); // Oculta a seção de modelos
 		c.DisplayRequestDuration();
 		c.EnableDeepLinking();

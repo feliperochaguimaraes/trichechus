@@ -28,5 +28,10 @@
 		<ProjectReference Include="..\Trichechus.Application\Trichechus.Application.csproj" />
 		<ProjectReference Include="..\Trichechus.Infrastructure\Trichechus.Infrastructure.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	<Content Update="web.config">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+</ItemGroup>
 
 </Project>

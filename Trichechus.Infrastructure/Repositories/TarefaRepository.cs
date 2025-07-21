@@ -20,7 +20,9 @@ public class TarefaRepository : ITarefaRepository
 	}
 	public async Task<IEnumerable<Tarefa>> GetAllAsync()
 	{
-		return await _context.Tarefas.ToListAsync();
+		return await _context.Tarefas
+			.Where(a => a.DeletadoEm == null)
+			.ToListAsync();
 	}
 
 	public async Task AddAsync(Tarefa tarefa)

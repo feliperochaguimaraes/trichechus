@@ -22,7 +22,7 @@ public class AtividadeRepository : IAtividadeRepository
 	public async Task<IEnumerable<Atividade>> GetAllAsync()
 	{
 		return await _context.Atividades
-			.Include(a => a.Tarefas)
+			.Include(a => a.Tarefas.Where(t => t.DeletadoEm == null))
 			.Where(a => a.DeletadoEm == null)
 			.ToListAsync();
 	}

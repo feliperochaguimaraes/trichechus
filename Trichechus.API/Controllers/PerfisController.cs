@@ -40,7 +40,7 @@ namespace Trichechus.API.Controllers
 		[SwaggerResponse(200, "Perfil encontrado", typeof(PerfilDto))]
 		[SwaggerResponse(403, "Não Autorizado")]
 		[SwaggerResponse(404, "Perfil não encontrado")]
-		[Authorize(Roles = "T_CAD_PER")]
+		[Authorize(Roles = "T_LIS_PER")]
 		public async Task<IActionResult> GetById(Guid id)
 		{
 			var result = await _perfilService.GetByIdAsync(id);
