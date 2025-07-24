@@ -22,10 +22,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
+	var conf = builder.Configuration;
 	options.AddPolicy("AllowFrontend",
 		policy => policy
-			.WithOrigins("http://localhost:5116","http://10.0.20.34:5116") // Porta do seu frontend
-
+			.WithOrigins(conf["Cors:end1"]!, conf["Cors:end2"]!) // Porta do seu frontend
 			// .AllowAnyOrigin() //PARA DEV
 			.AllowAnyHeader()
 			.AllowAnyMethod()

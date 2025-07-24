@@ -29,18 +29,19 @@ public class AtividadeService : IAtividadeService
 	public async Task<IEnumerable<AtividadeDto>> GetAllAtividadesAsync()
 	{
 		var atividades = await _repository.GetAllAsync();
-		return atividades.Select(a => MapToDTO(a));
+		return atividades.Select(a => MapToDto(a));
 	}
 
 	public async Task<Result<AtividadeDto>> GetAtividadeByIdAsync(Guid id)
 	{
-		var atividade = await _repository.GetByIdAsync(id);
+		var atividade = await _repository.GetByIdWithTarefasAsync(id);
 		if (atividade == null)
 		{
 			return Result<AtividadeDto>.Failure(new List<string> { "Atividade não encontrada." });
 		}
 
-		return Result<AtividadeDto>.Success(MapToDTO(atividade));
+		var dto = MapToDto(atividade);
+		return Result<AtividadeDto>.Success(dto);
 	}
 	public async Task<Result<Guid>> CreateAtividadeAsync(CreateAtividadeDto dto)
 	{
@@ -127,7 +128,7 @@ public class AtividadeService : IAtividadeService
 		return Result.Success();
 	}
 
-	private AtividadeDto MapToDTO(Atividade atividade)
+	private AtividadeDto MapToDto(Atividade atividade)
 	{
 		return new AtividadeDto
 		{

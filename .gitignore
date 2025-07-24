@@ -4,3 +4,5 @@
 /.vscode
 /src
 /publicar-trichechus.bat
+trichechus.db-shm
+trichechus.db-wal

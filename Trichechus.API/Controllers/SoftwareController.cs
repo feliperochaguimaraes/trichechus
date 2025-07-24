@@ -19,15 +19,15 @@ public class SoftwareController : ControllerBase
 	{
 		_softwareService = softwareService;
 	}
+
 	/// <summary>
 	/// Obtém todos os softwarees
 	/// </summary>
 	/// <returns>Lista de Softwarees</returns>
 	[HttpGet]
-	// [SwaggerOperation(Summary = "Obtém todos os softwarees", Description = "Retorna uma lista com todos os softwarees cadastrados")]
-	// [SwaggerResponse(200, "Lista de software retornada com sucesso", typeof(IEnumerable<SoftwareDTO>))]
-	// [SwaggerResponse(401, "Não autorizado")]
-	// [AllowAnonymous]
+	[SwaggerOperation(Summary = "Obtém todos os softwarees", Description = "Retorna uma lista com todos os softwarees cadastrados")]
+	[SwaggerResponse(200, "Lista de software retornada com sucesso", typeof(IEnumerable<SoftwareDto>))]
+	[SwaggerResponse(401, "Não autorizado")]
 	[Authorize(Roles = "T_LIS_SOF")]
 	public async Task<IActionResult> GetAll()
 	{
@@ -36,7 +36,8 @@ public class SoftwareController : ControllerBase
 			Console.WriteLine("➡️  Iniciando GetAll");
 
 			var software = await _softwareService.GetAllSoftwareAsync();
-
+			if (software is null)
+				software = [];
 			Console.WriteLine("✅ Sucesso no GetAll");
 			return Ok(software);
 		}
@@ -56,6 +57,7 @@ public class SoftwareController : ControllerBase
 	[HttpGet("{id}")]
 	[SwaggerOperation(Summary = "Obtém um software pelo ID", Description = "Retorna os dados de um software específico")]
 	[SwaggerResponse(200, "Software encontrado com sucesso", typeof(SoftwareDto))]
+	[SwaggerResponse(401, "Não autorizado")]
 	[SwaggerResponse(404, "Software não encontrado")]
 	[Authorize(Roles = "T_LIS_SOF")]
 	public async Task<IActionResult> GetById(Guid id)
@@ -122,6 +124,7 @@ public class SoftwareController : ControllerBase
 	[HttpDelete("{id}")]
 	[SwaggerOperation(Summary = "Remove um software", Description = "Remove um software existente")]
 	[SwaggerResponse(204, "Software removida com sucesso")]
+	[SwaggerResponse(401, "Não autorizado")]
 	[SwaggerResponse(404, "Software não encontrada")]
 	[Authorize(Roles = "T_DEL_SOF")]
 	public async Task<IActionResult> Delete(Guid id)

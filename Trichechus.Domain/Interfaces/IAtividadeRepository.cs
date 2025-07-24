@@ -7,6 +7,7 @@ public interface IAtividadeRepository
 	//PADRONIZAÇÃO DAS FUNÇÕES
 	//=============================================
 	Task<Atividade> GetByIdAsync(Guid id);
+	Task<Atividade> GetByIdWithTarefasAsync(Guid id);
 	Task<IEnumerable<Atividade>> GetAllAsync();
 	Task AddAsync(Atividade atividade);
 	Task UpdateAsync(Atividade atividade);

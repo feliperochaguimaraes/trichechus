@@ -16,8 +16,17 @@ public class AtividadeRepository : IAtividadeRepository
 
 	public async Task<Atividade> GetByIdAsync(Guid id)
 	{
-		return await _context.Atividades.FindAsync(id);
+		// return await _context.Atividades.FindAsync(id);
+		return await _context.Atividades
+			//.Include(a => a.Tarefas.Where(t => t.DeletadoEm == null)).;
+			.FindAsync(id);
 	}
+	public async Task<Atividade> GetByIdWithTarefasAsync(Guid id)
+    {
+        return await _context.Atividades
+           .Include(a => a.Tarefas.Where(t => t.DeletadoEm == null))
+           .FirstOrDefaultAsync(a => a.Id == id);
+    }
 
 	public async Task<IEnumerable<Atividade>> GetAllAsync()
 	{

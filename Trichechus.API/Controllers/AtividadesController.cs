@@ -1,14 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
+using Trichechus.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Trichechus.Application.DTOs;
-using Trichechus.Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-
-// using Trichechus.Application.UseCases.Atividades.CreateAtividade;
-// using Trichechus.Application.UseCases.Atividades.GetAtividades;
-// using Trichechus.Application.UseCases.atividades.UpdateAtividade;
-// using Trichechus.Application.UseCases.Atividades.DeleteAtividade;
-// using Trichechus.Application.UseCases.Atividades.UpdateAtividade;
 
 namespace Trichechus.API.Controllers;
 

@@ -23,7 +23,10 @@ namespace Trichechus.Application.Services
 		public async Task<Result<PerfilDto>> GetByIdAsync(Guid id)
 		{
 			var perfil = await _perfilRepository.GetByIdWithFuncionalidadesAsync(id);
-			if (perfil == null) return Result<PerfilDto>.Failure(new[] { "Perfil não encontrado." });
+			if (perfil == null)
+			{
+				return Result<PerfilDto>.Failure(new[] { "Perfil não encontrado." });
+			}
 
 			var dto = MapToDto(perfil);
 			return Result<PerfilDto>.Success(dto);
