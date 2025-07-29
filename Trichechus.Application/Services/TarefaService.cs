@@ -46,12 +46,12 @@ namespace Trichechus.Application.Services
 		public async Task<IEnumerable<TarefaDto>> GetTarefasByAtividadeIdAsync(Guid atividadeId)
 		{
 			var atividade = await _atividadeRepository.GetByIdAsync(atividadeId);
-			if (atividade == null || atividade.Tarefas == null)
+			if (atividade == null || atividade.Tarefa == null)
 			{
 				return Enumerable.Empty<TarefaDto>();
 			}
 
-			return atividade.Tarefas.Select(t => MapToDTO(t));
+			return atividade.Tarefa.Select(t => MapToDTO(t));
 		}
 
 		public async Task<Result<Guid>> CreateTarefaAsync(CreateTarefaDto dto)

@@ -49,30 +49,30 @@ namespace Trichechus.Infrastructure.Migrations
 
             modelBuilder.Entity("FuncionalidadePerfil", b =>
                 {
-                    b.Property<Guid>("FuncionalidadesId")
+                    b.Property<Guid>("FuncionalidadeId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("PerfisId")
+                    b.Property<Guid>("PerfilId")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("FuncionalidadesId", "PerfisId");
+                    b.HasKey("FuncionalidadeId", "PerfilId");
 
-                    b.HasIndex("PerfisId");
+                    b.HasIndex("PerfilId");
 
                     b.ToTable("PerfilFuncionalidade", (string)null);
                 });
 
-            modelBuilder.Entity("PerfilUsuarioLocal", b =>
+            modelBuilder.Entity("PerfilUsuario", b =>
                 {
-                    b.Property<Guid>("PerfisId")
+                    b.Property<Guid>("PerfilId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UsuariosId")
+                    b.Property<Guid>("UsuarioId")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PerfisId", "UsuariosId");
+                    b.HasKey("PerfilId", "UsuarioId");
 
-                    b.HasIndex("UsuariosId");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("UsuarioPerfil", (string)null);
                 });
@@ -122,7 +122,7 @@ namespace Trichechus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Atividades");
+                    b.ToTable("Atividade");
                 });
 
             modelBuilder.Entity("Trichechus.Domain.Entities.BaseDados", b =>
@@ -168,8 +168,8 @@ namespace Trichechus.Infrastructure.Migrations
 
                     b.Property<string>("CatalogoEquipe")
                         .IsRequired()
-                        .HasMaxLength(39)
-                        .HasColumnType("varchar(39)")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("CatalogoEquipe");
 
                     b.Property<string>("HelixCategoria")
@@ -250,7 +250,7 @@ namespace Trichechus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contratos");
+                    b.ToTable("Contrato");
                 });
 
             modelBuilder.Entity("Trichechus.Domain.Entities.Fornecedor", b =>
@@ -300,7 +300,7 @@ namespace Trichechus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Fornecedores");
+                    b.ToTable("Fornecedor");
                 });
 
             modelBuilder.Entity("Trichechus.Domain.Entities.Funcionalidade", b =>
@@ -323,7 +323,7 @@ namespace Trichechus.Infrastructure.Migrations
                     b.HasIndex("Nome")
                         .IsUnique();
 
-                    b.ToTable("Funcionalidades");
+                    b.ToTable("Funcionalidade");
                 });
 
             modelBuilder.Entity("Trichechus.Domain.Entities.Perfil", b =>
@@ -346,7 +346,7 @@ namespace Trichechus.Infrastructure.Migrations
                     b.HasIndex("Nome")
                         .IsUnique();
 
-                    b.ToTable("Perfis");
+                    b.ToTable("Perfil");
                 });
 
             modelBuilder.Entity("Trichechus.Domain.Entities.Repositorio", b =>
@@ -491,7 +491,7 @@ namespace Trichechus.Infrastructure.Migrations
 
                     b.HasIndex("AtividadeId");
 
-                    b.ToTable("Tarefas");
+                    b.ToTable("Tarefa");
                 });
 
             modelBuilder.Entity("Trichechus.Domain.Entities.URL", b =>
@@ -534,7 +534,7 @@ namespace Trichechus.Infrastructure.Migrations
                     b.ToTable("URL");
                 });
 
-            modelBuilder.Entity("Trichechus.Domain.Entities.UsuarioLocal", b =>
+            modelBuilder.Entity("Trichechus.Domain.Entities.Usuario", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -556,6 +556,14 @@ namespace Trichechus.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Equipe")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Matricula")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -570,7 +578,7 @@ namespace Trichechus.Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("UsuariosLocais");
+                    b.ToTable("Usuario");
                 });
 
             modelBuilder.Entity("BaseDadosSoftware", b =>
@@ -607,28 +615,28 @@ namespace Trichechus.Infrastructure.Migrations
                 {
                     b.HasOne("Trichechus.Domain.Entities.Funcionalidade", null)
                         .WithMany()
-                        .HasForeignKey("FuncionalidadesId")
+                        .HasForeignKey("FuncionalidadeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Trichechus.Domain.Entities.Perfil", null)
                         .WithMany()
-                        .HasForeignKey("PerfisId")
+                        .HasForeignKey("PerfilId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PerfilUsuarioLocal", b =>
+            modelBuilder.Entity("PerfilUsuario", b =>
                 {
                     b.HasOne("Trichechus.Domain.Entities.Perfil", null)
                         .WithMany()
-                        .HasForeignKey("PerfisId")
+                        .HasForeignKey("PerfilId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Trichechus.Domain.Entities.UsuarioLocal", null)
+                    b.HasOne("Trichechus.Domain.Entities.Usuario", null)
                         .WithMany()
-                        .HasForeignKey("UsuariosId")
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -657,7 +665,7 @@ namespace Trichechus.Infrastructure.Migrations
             modelBuilder.Entity("Trichechus.Domain.Entities.Tarefa", b =>
                 {
                     b.HasOne("Trichechus.Domain.Entities.Atividade", "Atividade")
-                        .WithMany("Tarefas")
+                        .WithMany("Tarefa")
                         .HasForeignKey("AtividadeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -674,7 +682,7 @@ namespace Trichechus.Infrastructure.Migrations
 
             modelBuilder.Entity("Trichechus.Domain.Entities.Atividade", b =>
                 {
-                    b.Navigation("Tarefas");
+                    b.Navigation("Tarefa");
                 });
 
             modelBuilder.Entity("Trichechus.Domain.Entities.Contrato", b =>

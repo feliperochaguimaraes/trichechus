@@ -36,9 +36,9 @@ public class LocalAutenticacaoController : ControllerBase
 	[SwaggerOperation(Summary = "Registra um novo usuário local", Description = "Cria uma nova conta de usuário gerenciada pelo Trichechus")]
 	[SwaggerResponse(200, "Usuário registrado com sucesso", typeof(UsuarioTokenDTO))]
 	[SwaggerResponse(400, "Dados inválidos ou email já em uso")]
-	public async Task<IActionResult> RegistrarLocal([FromBody] RegistroUsuarioLocalDTO dto)
+	public async Task<IActionResult> RegistrarLocal([FromBody] RegistroUsuarioDTO dto)
 	{
-		var result = await _localAutenticacaoService.RegistrarLocalAsync(dto);
+		var result = await _localAutenticacaoService.RegistrarAsync(dto);
 
 		if (!result.IsSuccess)
 			return BadRequest(result.Errors);

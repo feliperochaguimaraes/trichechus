@@ -13,25 +13,25 @@ namespace Trichechus.Application.Services;
 
 public class LocalAutenticacaoService : ILocalAutenticacaoService
 {
-	private readonly IUsuarioLocalRepository _usuarioLocalRepository;
+	private readonly IUsuarioRepository _usuarioRepository;
 	private readonly IPerfilRepository _perfilRepository;
 	private readonly ITokenService _tokenService;
-	private readonly IValidator<RegistroUsuarioLocalDTO> _registroValidator;
+	private readonly IValidator<RegistroUsuarioDTO> _registroValidator;
 	// O validador de LoginUsuarioDTO já deve estar registrado globalmente
 
 	public LocalAutenticacaoService(
-		IUsuarioLocalRepository usuarioLocalRepository,
+		IUsuarioRepository usuarioLocalRepository,
 		IPerfilRepository perfilRepository,
 		ITokenService tokenService,
-		IValidator<RegistroUsuarioLocalDTO> registroValidator)
+		IValidator<RegistroUsuarioDTO> registroValidator)
 	{
-		_usuarioLocalRepository = usuarioLocalRepository;
+		_usuarioRepository = usuarioLocalRepository;
 		_perfilRepository = perfilRepository;
 		_tokenService = tokenService;
 		_registroValidator = registroValidator;
 	}
 
-	public async Task<Result<UsuarioTokenDTO>> RegistrarLocalAsync(RegistroUsuarioLocalDTO dto)
+	public async Task<Result<UsuarioTokenDTO>> RegistrarAsync(RegistroUsuarioDTO dto)
 	{
 		// Validar DTO
 		var validationResult = await _registroValidator.ValidateAsync(dto);
@@ -41,7 +41,7 @@ public class LocalAutenticacaoService : ILocalAutenticacaoService
 		}
 
 		// Verificar se email já existe
-		if (await _usuarioLocalRepository.EmailExistsAsync(dto.Email))
+		if (await _usuarioRepository.EmailExistsAsync(dto.Email))
 		{
 			return Result<UsuarioTokenDTO>.Failure(new[] { "Este email já está em uso." });
 		}
@@ -76,27 +76,29 @@ public class LocalAutenticacaoService : ILocalAutenticacaoService
 		}
 
 		// Criar novo usuário local
-		var novoUsuario = new UsuarioLocal
+		var novoUsuario = new Usuario
 		{
 			Nome = dto.Nome,
 			Email = dto.Email,
 			SenhaHash = BC.HashPassword(dto.Senha),
 			Ativo = true, // Ou false, se precisar de confirmação de email
 			CriadoEm = DateTime.UtcNow,
-			Perfis = perfisParaAdicionar
+			Equipe = dto.Equipe,
+			Matricula = dto.Matricula,
+			Perfil = perfisParaAdicionar
 		};
 
-		await _usuarioLocalRepository.AddAsync(novoUsuario);
+		await _usuarioRepository.AddAsync(novoUsuario);
 
 		// Gerar token para o novo usuário
-		var tokenResult = await GerarTokenParaUsuarioLocal(novoUsuario);
+		var tokenResult = await GerarTokenParaUsuario(novoUsuario);
 		return tokenResult;
 	}
 
 	public async Task<Result<UsuarioTokenDTO>> LoginLocalAsync(LoginUsuarioDTO dto)
 	{
 		// Buscar usuário pelo email (incluindo perfis e funcionalidades)
-		var usuario = await _usuarioLocalRepository.GetByEmailAsync(dto.Email);
+		var usuario = await _usuarioRepository.GetByEmailAsync(dto.Email);
 
 		// Verificar se usuário existe, está ativo e senha confere
 		if (usuario == null || !usuario.Ativo || !BC.Verify(dto.Senha, usuario.SenhaHash))
@@ -105,33 +107,33 @@ public class LocalAutenticacaoService : ILocalAutenticacaoService
 		}
 
 		// Gerar token
-		var tokenResult = await GerarTokenParaUsuarioLocal(usuario);
+		var tokenResult = await GerarTokenParaUsuario(usuario);
 		return tokenResult;
 	}
 
 	// Método auxiliar para gerar token e extrair funcionalidades como roles
-	private async Task<Result<UsuarioTokenDTO>> GerarTokenParaUsuarioLocal(UsuarioLocal usuario)
+	private async Task<Result<UsuarioTokenDTO>> GerarTokenParaUsuario(Usuario usuario)
 	{
-		if (usuario.Perfis == null || !usuario.Perfis.Any())
+		if (usuario.Perfil == null || !usuario.Perfil.Any())
 		{
 			// Recarrega o usuário com os perfis e funcionalidades, caso não tenham sido carregados
-			var usuarioCompleto = await _usuarioLocalRepository.GetByIdAsync(usuario.Id);
+			var usuarioCompleto = await _usuarioRepository.GetByIdAsync(usuario.Id);
 			if (usuarioCompleto == null)
 				return Result<UsuarioTokenDTO>.Failure(new[] { "Usuário não encontrado." });
 
 			usuario = usuarioCompleto;
 
-			if (usuario.Perfis == null || !usuario.Perfis.Any())
+			if (usuario.Perfil == null || !usuario.Perfil.Any())
 				return Result<UsuarioTokenDTO>.Failure(new[] { "Usuário sem perfis atribuídos." });
 		}
 
 		// Extrair todas as funcionalidades únicas dos perfis do usuário
-		var funcionalidades = usuario.Perfis
-			.SelectMany(p => p.Funcionalidades ?? new List<Funcionalidade>())
+		var funcionalidades = usuario.Perfil
+			.SelectMany(p => p.Funcionalidade ?? new List<Funcionalidade>())
 			.Select(f => f.Nome)
 			.Distinct()
 			.ToList();
-		var perfis = usuario.Perfis.Select(f => f.Nome).ToList();
+		var perfis = usuario.Perfil.Select(f => f.Nome).ToList();
 		// Criar um objeto temporário para passar ao TokenService
 		var usuarioParaToken = new UsuarioParaToken
 		{
@@ -158,6 +160,6 @@ public class UsuarioParaToken
 }
 public interface ILocalAutenticacaoService
 {
-	Task<Result<UsuarioTokenDTO>> RegistrarLocalAsync(RegistroUsuarioLocalDTO dto);
+	Task<Result<UsuarioTokenDTO>> RegistrarAsync(RegistroUsuarioDTO dto);
 	Task<Result<UsuarioTokenDTO>> LoginLocalAsync(LoginUsuarioDTO dto);
 }

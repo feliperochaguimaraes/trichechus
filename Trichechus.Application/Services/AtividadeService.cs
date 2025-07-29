@@ -142,7 +142,7 @@ public class AtividadeService : IAtividadeService
 			CriadoEm = atividade.CriadoEm,
 			AtualizadoEm = atividade.AtualizadoEm,
 			TipoEntrada = atividade.TipoEntrada,
-			Tarefas = atividade.Tarefas?.Select(t => new TarefaDto
+			Tarefas = atividade.Tarefa?.Select(t => new TarefaDto
 			{
 				Id = t.Id,
 				Titulo = t.Titulo,

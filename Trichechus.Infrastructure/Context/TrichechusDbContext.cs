@@ -10,18 +10,18 @@ public class TrichechusDbContext : DbContext
 	{
 	}
 
-	public DbSet<Atividade> Atividades => Set<Atividade>();
+	public DbSet<Atividade> Atividade => Set<Atividade>();
 	public DbSet<BaseDados> BaseDados  => Set<BaseDados>();
 	public DbSet<Catalogo> Catalogo  => Set<Catalogo>();
-	public DbSet<Contrato> Contratos  => Set<Contrato>();
-	public DbSet<Fornecedor> Fornecedores  => Set<Fornecedor>();
-	public DbSet<Funcionalidade> Funcionalidades => Set<Funcionalidade>();
-	public DbSet<Perfil> Perfis => Set<Perfil>();
+	public DbSet<Contrato> Contrato  => Set<Contrato>();
+	public DbSet<Fornecedor> Fornecedor  => Set<Fornecedor>();
+	public DbSet<Funcionalidade> Funcionalidade => Set<Funcionalidade>();
+	public DbSet<Perfil> Perfil => Set<Perfil>();
 	public DbSet<Repositorio> Repositorio  => Set<Repositorio>();
 	public DbSet<Software> Software  => Set<Software>();
-	public DbSet<Tarefa> Tarefas => Set<Tarefa>();
+	public DbSet<Tarefa> Tarefa => Set<Tarefa>();
 	public DbSet<URL> URL => Set<URL>();
-	public DbSet<UsuarioLocal> UsuariosLocais => Set<UsuarioLocal>();
+	public DbSet<Usuario> Usuario => Set<Usuario>();
 
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,7 +40,7 @@ public class TrichechusDbContext : DbContext
 			entity.HasKey(t => t.Id);
 			entity.Property(t => t.Titulo).IsRequired().HasMaxLength(200);
 			entity.HasOne(t => t.Atividade)
-				  .WithMany(a => a.Tarefas)
+				  .WithMany(a => a.Tarefa)
 				  .HasForeignKey(t => t.AtividadeId);
 		});
 
@@ -62,13 +62,13 @@ public class TrichechusDbContext : DbContext
 			entity.Property(p => p.Descricao).HasMaxLength(500);
 
 			// Relacionamento Muitos-para-Muitos com Funcionalidade
-			entity.HasMany(p => p.Funcionalidades)
-				  .WithMany(f => f.Perfis)
+			entity.HasMany(p => p.Funcionalidade)
+				  .WithMany(f => f.Perfil)
 				  .UsingEntity(j => j.ToTable("PerfilFuncionalidade")); // Tabela de junção
 		});
 
-		// Configuração UsuarioLocal
-		modelBuilder.Entity<UsuarioLocal>(entity =>
+		// Configuração Usuario
+		modelBuilder.Entity<Usuario>(entity =>
 		{
 			entity.HasKey(u => u.Id);
 			entity.Property(u => u.Nome).IsRequired().HasMaxLength(200);
@@ -78,8 +78,8 @@ public class TrichechusDbContext : DbContext
 			entity.Property(u => u.Ativo).IsRequired();
 
 			// Relacionamento Muitos-para-Muitos com Perfil
-			entity.HasMany(u => u.Perfis)
-				  .WithMany(p => p.Usuarios)
+			entity.HasMany(u => u.Perfil)
+				  .WithMany(p => p.Usuario)
 				  .UsingEntity(j => j.ToTable("UsuarioPerfil")); // Tabela de junção
 		});
 	}

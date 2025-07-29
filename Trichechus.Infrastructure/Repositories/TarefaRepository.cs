@@ -16,33 +16,33 @@ public class TarefaRepository : ITarefaRepository
 
 	public async Task<Tarefa> GetByIdAsync(Guid id)
 	{
-		return await _context.Tarefas.FindAsync(id);
+		return await _context.Tarefa.FindAsync(id);
 	}
 	public async Task<IEnumerable<Tarefa>> GetAllAsync()
 	{
-		return await _context.Tarefas
+		return await _context.Tarefa
 			.Where(a => a.DeletadoEm == null)
 			.ToListAsync();
 	}
 
 	public async Task AddAsync(Tarefa tarefa)
 	{
-		await _context.Tarefas.AddAsync(tarefa);
+		await _context.Tarefa.AddAsync(tarefa);
 		await _context.SaveChangesAsync();
 	}
 
 	public async Task UpdateAsync(Tarefa tarefa)
 	{
-		_context.Tarefas.Update(tarefa);
+		_context.Tarefa.Update(tarefa);
 		await _context.SaveChangesAsync();
 	}
 
 	public async Task DeleteAsync(Guid id)
 	{
-		var tarefa = await _context.Tarefas.FindAsync(id);
+		var tarefa = await _context.Tarefa.FindAsync(id);
 		if (tarefa != null)
 		{
-			_context.Tarefas.Remove(tarefa);
+			_context.Tarefa.Remove(tarefa);
 			await _context.SaveChangesAsync();
 		}
 	}

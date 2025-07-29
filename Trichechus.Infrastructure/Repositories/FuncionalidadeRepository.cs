@@ -16,37 +16,37 @@ public class FuncionalidadeRepository : IFuncionalidadeRepository
 
 	public async Task<Funcionalidade> GetByIdAsync(Guid id)
 	{
-		return await _context.Funcionalidades.FindAsync(id);
+		return await _context.Funcionalidade.FindAsync(id);
 	}
 
 	public async Task<Funcionalidade> GetByNameAsync(string nome)
 	{
-		return await _context.Funcionalidades.FirstOrDefaultAsync(f => f.Nome.ToLower() == nome.ToLower());
+		return await _context.Funcionalidade.FirstOrDefaultAsync(f => f.Nome.ToLower() == nome.ToLower());
 	}
 
 	public async Task<IEnumerable<Funcionalidade>> GetAllAsync()
 	{
-		return await _context.Funcionalidades.ToListAsync();
+		return await _context.Funcionalidade.ToListAsync();
 	}
 
 	public async Task AddAsync(Funcionalidade funcionalidade)
 	{
-		await _context.Funcionalidades.AddAsync(funcionalidade);
+		await _context.Funcionalidade.AddAsync(funcionalidade);
 		await _context.SaveChangesAsync();
 	}
 
 	public async Task UpdateAsync(Funcionalidade funcionalidade)
 	{
-		_context.Funcionalidades.Update(funcionalidade);
+		_context.Funcionalidade.Update(funcionalidade);
 		await _context.SaveChangesAsync();
 	}
 
 	public async Task DeleteAsync(Guid id)
 	{
-		var funcionalidade = await _context.Funcionalidades.FindAsync(id);
+		var funcionalidade = await _context.Funcionalidade.FindAsync(id);
 		if (funcionalidade != null)
 		{
-			_context.Funcionalidades.Remove(funcionalidade);
+			_context.Funcionalidade.Remove(funcionalidade);
 			await _context.SaveChangesAsync();
 		}
 	}

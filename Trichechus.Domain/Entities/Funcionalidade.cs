@@ -7,6 +7,6 @@ namespace Trichechus.Domain.Entities
 		public string? Descricao { get; set; }
 
 		// Navegação para Perfis
-		public ICollection<Perfil> Perfis { get; set; } = new List<Perfil>();
+		public ICollection<Perfil> Perfil { get; set; } = new List<Perfil>();
 	}
 }

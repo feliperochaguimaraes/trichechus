@@ -1,22 +1,6 @@
-// Application/DTOs/UsuarioDTO.cs
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 namespace Trichechus.Application.DTOs;
 
-public class RegistroUsuarioDTO
-{
-	[Required(ErrorMessage = "O nome é obrigatório")]
-	public string Nome { get; set; } = default!;
-	[Required(ErrorMessage = "O email é obrigatório")]
-	// [EmailAddress(ErrorMessage = "Formato de email inválido")]
-	public string Email { get; set; } = default!;
-	[Required(ErrorMessage = "A senha é obrigatória")]
-	[StringLength(100, MinimumLength = 6, ErrorMessage = "A senha deve ter entre 6 e 100 caracteres")]
-	public string Senha { get; set; } = default!;
-	[Compare("Senha", ErrorMessage = "As senhas não conferem")]
-	public string ConfirmacaoSenha { get; set; } = default!;
-}
 public class LoginUsuarioDTO
 {
 	[Required(ErrorMessage = "O email é obrigatório")]
@@ -32,10 +16,10 @@ public class UsuarioTokenDTO
 	public string Nome { get; set; } = default!;
 	public string Email { get; set; } = default!;
 	public List<string> Roles { get; set; } = new List<string>();
-	public List<string> Perfis { get; set; } = new List<string>();
+	public List<string> Perfil { get; set; } = new List<string>();
 }
 
-public class RegistroUsuarioLocalDTO
+public class RegistroUsuarioDTO
 {
 	[Required(ErrorMessage = "O nome é obrigatório")]
 	[StringLength(200)]
@@ -46,6 +30,14 @@ public class RegistroUsuarioLocalDTO
 	[StringLength(200)]
 	public string Email { get; set; } = default!;
 
+	[Required(ErrorMessage = "O campo Equipe é obrigatório")]
+	[StringLength(200)]
+	public string Equipe { get; set; } = default!;
+
+	[Required(ErrorMessage = "O campo Matricula é obrigatório")]
+	[StringLength(10)]
+	public string Matricula { get; set; } = default!;
+
 	[Required(ErrorMessage = "A senha é obrigatória")]
 	[StringLength(100, MinimumLength = 6, ErrorMessage = "A senha deve ter entre 6 e 100 caracteres")]
 	public string Senha { get; set; } = default!;
@@ -55,4 +47,81 @@ public class RegistroUsuarioLocalDTO
 
 	// Opcional: Lista de Nomes ou IDs de Perfis para atribuir no registro
 	public List<string>? NomesPerfis { get; set; }
+}
+
+public class UsuarioDto
+{
+	public Guid Id { get; set; }
+	public string Nome { get; set; } = default!;
+	public string Email { get; set; } = default!;
+	public string Equipe { get; set; } = default!;
+	public string Matricula { get; set; } = default!;
+	public string SenhaHash { get; set; } = default!;
+	public bool Ativo { get; set; } = true;
+	public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
+	public DateTime? AtualizadoEm { get; set; }
+	public List<PerfilDto>? Perfil { get; set; }
+}
+
+public class CreateUsuarioDto
+{
+	[Required(ErrorMessage = "O nome é obrigatório")]
+	[StringLength(200)]
+	public string Nome { get; set; } = default!;
+
+	[Required(ErrorMessage = "O email é obrigatório")]
+	[EmailAddress(ErrorMessage = "Formato de email inválido")]
+	[StringLength(200)]
+	public string Email { get; set; } = default!;
+
+	public string Equipe { get; set; } = default!;
+	public string Matricula { get; set; } = default!;
+
+	[Required(ErrorMessage = "A senha é obrigatória")]
+	[StringLength(100, MinimumLength = 6, ErrorMessage = "A senha deve ter entre 6 e 100 caracteres")]
+	public string SenhaHash { get; set; } = default!;
+
+	public bool Ativo { get; set; } = true;
+
+	public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
+
+	public DateTime? AtualizadoEm { get; set; }
+
+	// Opcional: Lista de IDs de funcionalidades para associar ao perfil
+	public List<Guid>? PerfilIds { get; set; }
+}
+
+public class UpdateUsuarioDto
+{
+	public Guid Id { get; set; }
+
+	[Required(ErrorMessage = "O nome é obrigatório")]
+	[StringLength(200)]
+	public string Nome { get; set; } = default!;
+
+	[Required(ErrorMessage = "O email é obrigatório")]
+	[EmailAddress(ErrorMessage = "Formato de email inválido")]
+	[StringLength(200)]
+	public string Email { get; set; } = default!;
+
+	public string Equipe { get; set; } = default!;
+
+	public string Matricula { get; set; } = default!;
+
+	[Required(ErrorMessage = "A senha é obrigatória")]
+	[StringLength(100, MinimumLength = 6, ErrorMessage = "A senha deve ter entre 6 e 100 caracteres")]
+	public string SenhaHash { get; set; } = default!;
+
+	public bool Ativo { get; set; }
+
+	public DateTime? AtualizadoEm { get; set; }
+
+	public List<Guid>? PerfilIds { get; set; }
+}
+
+// DTO para associar/desassociar funcionalidade de um perfil
+public class AssociarPerfilUsuarioDto
+{
+	[Required]
+	public Guid PerfilId { get; set; }
 }

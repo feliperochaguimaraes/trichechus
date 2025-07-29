@@ -16,70 +16,70 @@ public class PerfilRepository : IPerfilRepository
 
     public async Task<Perfil> GetByIdAsync(Guid id)
     {
-        return await _context.Perfis.FindAsync(id);
+        return await _context.Perfil.FindAsync(id);
     }
 
     public async Task<Perfil> GetByIdWithFuncionalidadesAsync(Guid id)
     {
-        return await _context.Perfis
-           .Include(p => p.Funcionalidades)
+        return await _context.Perfil
+           .Include(p => p.Funcionalidade)
            .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<Perfil> GetByNameAsync(string nome)
     {
-        return await _context.Perfis
-            .Include(p => p.Funcionalidades)
+        return await _context.Perfil
+            .Include(p => p.Funcionalidade)
             .FirstOrDefaultAsync(p => p.Nome.ToLower() == nome.ToLower());
     }
 
     public async Task<IEnumerable<Perfil>> GetAllAsync()
     {
-        return await _context.Perfis.ToListAsync();
+        return await _context.Perfil.ToListAsync();
     }
 
     public async Task AddAsync(Perfil perfil)
     {
-        await _context.Perfis.AddAsync(perfil);
+        await _context.Perfil.AddAsync(perfil);
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Perfil perfil)
     {
-        _context.Perfis.Update(perfil);
+        _context.Perfil.Update(perfil);
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var perfil = await _context.Perfis.FindAsync(id);
+        var perfil = await _context.Perfil.FindAsync(id);
         if (perfil != null)
         {
-            _context.Perfis.Remove(perfil);
+            _context.Perfil.Remove(perfil);
             await _context.SaveChangesAsync();
         }
     }
 
     public async Task AddFuncionalidadeAsync(Guid perfilId, Guid funcionalidadeId)
     {
-        var perfil = await _context.Perfis.Include(p => p.Funcionalidades).FirstOrDefaultAsync(p => p.Id == perfilId);
-        var funcionalidade = await _context.Funcionalidades.FindAsync(funcionalidadeId);
+        var perfil = await _context.Perfil.Include(p => p.Funcionalidade).FirstOrDefaultAsync(p => p.Id == perfilId);
+        var funcionalidade = await _context.Funcionalidade.FindAsync(funcionalidadeId);
 
-        if (perfil != null && funcionalidade != null && !perfil.Funcionalidades.Any(f => f.Id == funcionalidadeId))
+        if (perfil != null && funcionalidade != null && !perfil.Funcionalidade.Any(f => f.Id == funcionalidadeId))
         {
-            perfil.Funcionalidades.Add(funcionalidade);
+            perfil.Funcionalidade.Add(funcionalidade);
             await _context.SaveChangesAsync();
         }
     }
 
     public async Task RemoveFuncionalidadeAsync(Guid perfilId, Guid funcionalidadeId)
     {
-        var perfil = await _context.Perfis.Include(p => p.Funcionalidades).FirstOrDefaultAsync(p => p.Id == perfilId);
-        var funcionalidade = perfil?.Funcionalidades.FirstOrDefault(f => f.Id == funcionalidadeId);
+        var perfil = await _context.Perfil.Include(p => p.Funcionalidade).FirstOrDefaultAsync(p => p.Id == perfilId);
+        var funcionalidade = perfil?.Funcionalidade.FirstOrDefault(f => f.Id == funcionalidadeId);
 
         if (perfil != null && funcionalidade != null)
         {
-            perfil.Funcionalidades.Remove(funcionalidade);
+            perfil.Funcionalidade.Remove(funcionalidade);
             await _context.SaveChangesAsync();
         }
     }

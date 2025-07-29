@@ -51,7 +51,7 @@ namespace Trichechus.Application.Services
 			{
 				Nome = dto.Nome,
 				Descricao = dto.Descricao,
-				Funcionalidades = new List<Funcionalidade>()
+				Funcionalidade = new List<Funcionalidade>()
 			};
 
 			// Adicionar funcionalidades se IDs foram fornecidos
@@ -62,7 +62,7 @@ namespace Trichechus.Application.Services
 					var funcionalidade = await _funcionalidadeRepository.GetByIdAsync(funcId);
 					if (funcionalidade != null)
 					{
-						perfil.Funcionalidades.Add(funcionalidade);
+						perfil.Funcionalidade.Add(funcionalidade);
 					}
 					// Opcional: retornar erro se funcionalidade não existir
 				}
@@ -90,13 +90,13 @@ namespace Trichechus.Application.Services
 			// Atualizar funcionalidades (exemplo simples: substitui todas)
 			if (dto.FuncionalidadeIds != null)
 			{
-				perfil.Funcionalidades.Clear();
+				perfil.Funcionalidade.Clear();
 				foreach (var funcId in dto.FuncionalidadeIds)
 				{
 					var funcionalidade = await _funcionalidadeRepository.GetByIdAsync(funcId);
 					if (funcionalidade != null)
 					{
-						perfil.Funcionalidades.Add(funcionalidade);
+						perfil.Funcionalidade.Add(funcionalidade);
 					}
 				}
 			}
@@ -145,7 +145,7 @@ namespace Trichechus.Application.Services
 				Id = perfil.Id,
 				Nome = perfil.Nome,
 				Descricao = perfil.Descricao,
-				Funcionalidades = perfil.Funcionalidades? // Mapeia funcionalidades se carregadas
+				Funcionalidades = perfil.Funcionalidade? // Mapeia funcionalidades se carregadas
 					.Select(f => new FuncionalidadeDto { Id = f.Id, Nome = f.Nome, Descricao = f.Descricao })
 					.ToList()
 			};

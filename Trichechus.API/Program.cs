@@ -16,16 +16,23 @@ using Trichechus.Application.Common;
 using Trichechus.API.Middlewares;
 using Trichechus.Infrastructure.Services;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+// Lê o ambiente a partir da variável de sistema ASPNETCORE_ENVIRONMENT
+var ambiente = builder.Environment.EnvironmentName;
+builder.Configuration
+	.SetBasePath(Directory.GetCurrentDirectory())
+	// .AddJsonFile("appsettings.json", optional: true)
+    .AddJsonFile($"appsettings.{ambiente}.json", optional: false)
+    .AddEnvironmentVariables();
+
+var configuration = builder.Configuration;
 
 builder.Services.AddCors(options =>
 {
-	var conf = builder.Configuration;
 	options.AddPolicy("AllowFrontend",
 		policy => policy
-			.WithOrigins(conf["Cors:end1"]!, conf["Cors:end2"]!) // Porta do seu frontend
+			.WithOrigins(configuration["Cors:end1"]!, configuration["Cors:end2"]!) // Porta do seu frontend
 			// .AllowAnyOrigin() //PARA DEV
 			.AllowAnyHeader()
 			.AllowAnyMethod()
@@ -54,7 +61,7 @@ builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
 builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
 builder.Services.AddScoped<IURLRepository, URLRepository>();
 // Registrar Repositórios Locais
-builder.Services.AddScoped<IUsuarioLocalRepository, UsuarioLocalRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
 // Registrar Serviços
 builder.Services.AddScoped<IAtividadeService, AtividadeService>();
@@ -97,7 +104,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-	var configuration = builder.Configuration;
+	// var configuration = builder.Configuration;
 
 	options.TokenValidationParameters = new TokenValidationParameters
 	{
@@ -148,7 +155,7 @@ builder.Services.AddSwaggerGen(c =>
 
 	c.SwaggerDoc("v1", new OpenApiInfo
 	{
-		Title = "Trichechus API",
+		Title = "Trichechus API - " + ambiente,
 		Version = "v1",
 		Description = "API para gerenciamento de atividades e tarefas do Sistema Trichechus - " + builder.Configuration.GetValue<string>("AMBIENTE")!.ToString(),
 		Contact = new OpenApiContact
@@ -172,48 +179,53 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-if (app.Environment.IsProduction())
-{
+//if (app.Environment.IsProduction())
+//{
 	app.UsePathBase("/trichechus");
+
 	app.UseSwagger();
 	app.UseSwaggerUI(c =>
 	{
-		c.SwaggerEndpoint("/trichechus/swagger/v1/swagger.json", "Trichechus API v1");
-		c.RoutePrefix = string.Empty; // Para servir a UI do Swagger na raiz
+		// Caminho relativo: NÃO inclua barra no início e nem o base path
+		c.SwaggerEndpoint("swagger/v1/swagger.json", "Trichechus API v1");
+
+		c.RoutePrefix = string.Empty;
+
 		c.DocExpansion(DocExpansion.None);
-		c.DefaultModelsExpandDepth(-1); // Oculta a seção de modelos
+		c.DefaultModelsExpandDepth(-1);
 		c.DisplayRequestDuration();
 		c.EnableDeepLinking();
 		c.EnableFilter();
 		c.ShowExtensions();
 
-		// Personalização de cores e estilos
-		c.InjectStylesheet("/trichechus/swagger-ui/custom.css");
-		c.InjectJavascript("/trichechus/swagger-ui/custom.js");
+		c.InjectStylesheet("swagger-ui/custom.css");
+		c.InjectJavascript("swagger-ui/custom.js");
 	});
-}
+
+	app.UseStaticFiles(); // Isso ajuda a servir os arquivos da UI
+//}
 
 // Swagger & Middlewares
-if (app.Environment.IsDevelopment())
-{
-	IdentityModelEventSource.ShowPII = true;
-	app.UseSwagger();
-	app.UseSwaggerUI(c =>
-	{
-		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Trichechus API v1");
-		c.RoutePrefix = string.Empty; // Para servir a UI do Swagger na raiz
-		c.DocExpansion(DocExpansion.None); //Fecha todos os endpoints
-		c.DefaultModelsExpandDepth(-1); // Oculta a seção de modelos
-		c.DisplayRequestDuration();
-		c.EnableDeepLinking();
-		c.EnableFilter();
-		c.ShowExtensions();
+// if (app.Environment.IsDevelopment())
+// {
+// 	IdentityModelEventSource.ShowPII = true;
+// 	app.UseSwagger();
+// 	app.UseSwaggerUI(c =>
+// 	{
+// 		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Trichechus API v1");
+// 		c.RoutePrefix = string.Empty; // Para servir a UI do Swagger na raiz
+// 		c.DocExpansion(DocExpansion.None); //Fecha todos os endpoints
+// 		c.DefaultModelsExpandDepth(-1); // Oculta a seção de modelos
+// 		c.DisplayRequestDuration();
+// 		c.EnableDeepLinking();
+// 		c.EnableFilter();
+// 		c.ShowExtensions();
 
-		// Personalização de cores e estilos
-		c.InjectStylesheet("/swagger-ui/custom.css");
-		c.InjectJavascript("/swagger-ui/custom.js");
-	});
-}
+// 		// Personalização de cores e estilos
+// 		c.InjectStylesheet("/swagger-ui/custom.css");
+// 		c.InjectJavascript("/swagger-ui/custom.js");
+// 	});
+// }
 
 // Adicionar o middleware CORS - IMPORTANTE: Deve vir antes de UseRouting, UseAuthentication, UseAuthorization e MapControllers
 app.UseCors("AllowFrontend");

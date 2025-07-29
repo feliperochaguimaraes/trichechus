@@ -16,12 +16,12 @@ public class ContratoRepository : IContratoRepository
 
 	public async Task<Contrato> GetByIdAsync(Guid id)
 	{
-		return await _context.Contratos.FindAsync(id);
+		return await _context.Contrato.FindAsync(id);
 	}
 
 	public async Task<IEnumerable<Contrato>> GetAllAsync()
 	{
-		return await _context.Contratos
+		return await _context.Contrato
 			// .Include(a => a.Tarefas)
 			// .Where(a => a.DeletadoEm == null)
 			.ToListAsync();
@@ -30,32 +30,32 @@ public class ContratoRepository : IContratoRepository
 
 	public async Task AddAsync(Contrato fornecedor)
 	{
-		await _context.Contratos.AddAsync(fornecedor);
+		await _context.Contrato.AddAsync(fornecedor);
 		await _context.SaveChangesAsync();
 	}
 
 	public async Task UpdateAsync(Contrato fornecedor)
 	{
-		_context.Contratos.Update(fornecedor);
+		_context.Contrato.Update(fornecedor);
 		await _context.SaveChangesAsync();
 	}
 
 	public async Task DeleteAsync(Guid id)
 	{
-		var fornecedor = await _context.Contratos.FindAsync(id);
+		var fornecedor = await _context.Contrato.FindAsync(id);
 		if (fornecedor != null)
 		{
-			_context.Contratos.Remove(fornecedor);
+			_context.Contrato.Remove(fornecedor);
 			await _context.SaveChangesAsync();
 		}
 	}
 
 	public async Task DeleteSoftAsync(Guid id)
 	{
-		var fornecedor = await _context.Contratos.FindAsync(id);
+		var fornecedor = await _context.Contrato.FindAsync(id);
 		if (fornecedor != null)
 		{
-			_context.Contratos.Update(fornecedor);
+			_context.Contrato.Update(fornecedor);
 			await _context.SaveChangesAsync();
 		}
 	}

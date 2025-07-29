@@ -95,7 +95,7 @@ public class TokenService : ITokenService
 			Expiracao = expiracao,
 			Nome = nome,
 			Email = email,
-			Perfis = perfil,
+			Perfil = perfil,
 			Roles = roles
 		};
 	}

@@ -31,5 +31,5 @@ public class Atividade
 	public string? TipoEntrada { get; set; }
 
 	// Navegação para as tarefas
-	public ICollection<Tarefa> Tarefas { get; set; } = new List<Tarefa>();
+	public ICollection<Tarefa> Tarefa { get; set; } = new List<Tarefa>();
 }
