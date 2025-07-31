@@ -28,10 +28,8 @@
 		<ProjectReference Include="..\Trichechus.Application\Trichechus.Application.csproj" />
 		<ProjectReference Include="..\Trichechus.Infrastructure\Trichechus.Infrastructure.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	<Content Update="web.config">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</Content>
-</ItemGroup>
 
+	<Target Name="DeleteWebReleaseConfig" AfterTargets="Publish">
+    	<Delete Files="$(PublishDir)web.Release.config" />
+  	</Target>
 </Project>

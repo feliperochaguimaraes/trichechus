@@ -22,8 +22,8 @@ var builder = WebApplication.CreateBuilder(args);
 var ambiente = builder.Environment.EnvironmentName;
 builder.Configuration
 	.SetBasePath(Directory.GetCurrentDirectory())
-	// .AddJsonFile("appsettings.json", optional: true)
-    .AddJsonFile($"appsettings.{ambiente}.json", optional: false)
+	// .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{ambiente}.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables();
 
 var configuration = builder.Configuration;
@@ -75,6 +75,7 @@ builder.Services.AddScoped<IRepositorioService, RepositorioService>();
 builder.Services.AddScoped<ISoftwareService, SoftwareService>();
 builder.Services.AddScoped<ITarefaService, TarefaService>();
 builder.Services.AddScoped<IURLService, URLService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ILocalAutenticacaoService, LocalAutenticacaoService>();
 builder.Services.AddScoped<ISGAAutenticacaoService, SGAAutenticacaoService>(); // Serviço de autenticação SGA
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -157,7 +158,7 @@ builder.Services.AddSwaggerGen(c =>
 	{
 		Title = "Trichechus API - " + ambiente,
 		Version = "v1",
-		Description = "API para gerenciamento de atividades e tarefas do Sistema Trichechus - " + builder.Configuration.GetValue<string>("AMBIENTE")!.ToString(),
+		Description = "API para gerenciamento de atividades e tarefas do Sistema Trichechus - " + builder.Configuration.GetValue<string>("AMBIENTE")!.ToString() + " --- " + configuration["AMBIENTE"],
 		Contact = new OpenApiContact
 		{
 			Name = "Luis Felipe Rocha Guimarães",
@@ -179,8 +180,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-//if (app.Environment.IsProduction())
-//{
+
 	app.UsePathBase("/trichechus");
 
 	app.UseSwagger();
@@ -203,7 +203,7 @@ var app = builder.Build();
 	});
 
 	app.UseStaticFiles(); // Isso ajuda a servir os arquivos da UI
-//}
+
 
 // Swagger & Middlewares
 // if (app.Environment.IsDevelopment())
@@ -242,6 +242,5 @@ app.UseMiddleware<UserContextMiddleware>();
 
 app.UseHttpsRedirection();
 app.MapControllers();
-
 
 app.Run();

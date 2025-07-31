@@ -18,10 +18,12 @@ public class LocalAutenticacaoController : ControllerBase
 	[HttpGet("ambiente")]
 	public IActionResult GetAmbiente()
 	{
-		var ambiente = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+		var ambiente = Environment.GetEnvironmentVariables();
+		// .GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 		return Ok(new
 		{
-			Ambiente = ambiente ?? "VARIÁVEL NÃO DEFINIDA"
+			//Ambiente = ambiente ?? "VARIÁVEL NÃO DEFINIDA"
+			ambiente
 		});
 	}
 	public LocalAutenticacaoController(ILocalAutenticacaoService localAutenticacaoService)

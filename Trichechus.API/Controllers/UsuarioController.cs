@@ -20,8 +20,8 @@ public class UsuarioController : ControllerBase
 	}
 
 	[HttpGet]
-	[SwaggerOperation(Summary = "Lista todos os perfis")]
-	[SwaggerResponse(200, "Lista de perfis", typeof(IEnumerable<UsuarioDto>))]
+	[SwaggerOperation(Summary = "Lista todos os usuarios")]
+	[SwaggerResponse(200, "Lista de usuarios", typeof(IEnumerable<UsuarioDto>))]
 	[SwaggerResponse(403, "Não Autorizado")]
 	[Authorize(Roles = "T_LIS_USU")]
 	public async Task<IActionResult> GetAll()
@@ -30,10 +30,10 @@ public class UsuarioController : ControllerBase
 		{
 			Console.WriteLine("➡️  Iniciando GetAll");
 
-			var atividades = await _usuarioService.GetAllAsync();
+			var usuarios = await _usuarioService.GetAllAsync();
 
 			Console.WriteLine("✅ Sucesso no GetAll");
-			return Ok(atividades);
+			return Ok(usuarios);
 		}
 		catch (Exception ex)
 		{
