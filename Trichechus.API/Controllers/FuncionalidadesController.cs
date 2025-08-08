@@ -9,7 +9,7 @@ namespace Trichechus.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-[Tags("Segurança")] // Adiciona uma tag para agrupar endpoints
+[Tags("Funcionalidade")] // Adiciona uma tag para agrupar endpoints
 [Authorize]
 public class FuncionalidadesController : ControllerBase
 {

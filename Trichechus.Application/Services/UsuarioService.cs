@@ -2,6 +2,7 @@ using Trichechus.Application.Common;
 using Trichechus.Application.DTOs;
 using Trichechus.Domain.Entities;
 using Trichechus.Domain.Interfaces;
+using BC = BCrypt.Net.BCrypt; // Alias para BCrypt
 
 namespace Trichechus.Application.Services;
 
@@ -47,7 +48,8 @@ public class UsuarioService : IUsuarioService
 			Email = dto.Email,
 			Equipe = dto.Equipe,
 			Matricula = dto.Matricula,
-			SenhaHash = dto.SenhaHash,
+			// SenhaHash = dto.SenhaHash,
+			SenhaHash = BC.HashPassword(dto.SenhaHash),
 			Ativo = dto.Ativo,
 			CriadoEm = dto.CriadoEm,
 			AtualizadoEm = dto.AtualizadoEm,
@@ -88,7 +90,7 @@ public class UsuarioService : IUsuarioService
 		usuario.Email = dto.Email;
 		usuario.Equipe = dto.Equipe;
 		usuario.Matricula = dto.Matricula;
-		usuario.SenhaHash = dto.SenhaHash;
+		usuario.SenhaHash = BC.HashPassword(dto.SenhaHash);
 		usuario.Ativo = dto.Ativo;
 		usuario.AtualizadoEm = dto.AtualizadoEm;
 
@@ -141,7 +143,7 @@ public class UsuarioService : IUsuarioService
 			Email = usuario.Email,
 			Equipe = usuario.Equipe,
 			Matricula = usuario.Matricula,
-			SenhaHash = usuario.SenhaHash,
+			SenhaHash = BC.HashPassword(usuario.SenhaHash),
 			Ativo = usuario.Ativo,
 			CriadoEm = usuario.CriadoEm,
 			AtualizadoEm = usuario.AtualizadoEm,

@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Trichechus.Domain\Trichechus.Domain.csproj" />
+    <ProjectReference Include="..\Trichechus.Application\Trichechus.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

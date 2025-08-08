@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Trichechus.Domain\Trichechus.Domain.csproj" />
-    <ProjectReference Include="..\Trichechus.Infrastructure\Trichechus.Infrastructure.csproj" />
+    <!-- <ProjectReference Include="..\Trichechus.Infrastructure\Trichechus.Infrastructure.csproj" /> -->
   </ItemGroup>
 
   <ItemGroup>

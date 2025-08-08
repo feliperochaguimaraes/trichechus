@@ -16,6 +16,9 @@ using Trichechus.Application.Common;
 using Trichechus.API.Middlewares;
 using Trichechus.Infrastructure.Services;
 using System.IdentityModel.Tokens.Jwt;
+using Trichechus.Infrastructure.Services.External;
+using Trichechus.Application.Interfaces.External;
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Lê o ambiente a partir da variável de sistema ASPNETCORE_ENVIRONMENT
@@ -81,9 +84,10 @@ builder.Services.AddScoped<ISGAAutenticacaoService, SGAAutenticacaoService>(); /
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddScoped<ISGAClient, SGAClient>();
+//builder.Services.AddScoped<IBmcService, BmcService>();
 
 builder.Services.AddHttpClient<ISGAClient, SGAClient>();
-
+//builder.Services.AddHttpClient<IBmcService, BmcService>();
 // Registrar Contexto do Usuário
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();

@@ -8,7 +8,7 @@ namespace Trichechus.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Tags("Segurança")] // Adiciona uma tag para agrupar endpoints
+[Tags("Usuário")] // Adiciona uma tag para agrupar endpoints
 [Authorize]
 public class UsuarioController : ControllerBase
 {

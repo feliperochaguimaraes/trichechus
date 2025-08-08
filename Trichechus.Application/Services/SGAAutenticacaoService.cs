@@ -1,11 +1,8 @@
 // Application/Services/SGAAutenticacaoService.cs
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Trichechus.Application.Common;
 using Trichechus.Application.DTOs;
-using Trichechus.Infrastructure.Services;
+using Trichechus.Application.Interfaces;
 
 namespace Trichechus.Application.Services;
 
@@ -35,7 +32,7 @@ public class SGAAutenticacaoService : ISGAAutenticacaoService
 
 		if (!sgaResult.Sucesso)
 		{
-			return Result<UsuarioTokenDTO>.Failure(new[] { sgaResult.Mensagem });
+			return Result<UsuarioTokenDTO>.Failure(new[] { sgaResult.Mensagem! });
 		}
 
 		// Criar um usuário virtual com as informações do SGA

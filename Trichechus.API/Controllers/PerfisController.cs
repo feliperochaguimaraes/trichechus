@@ -8,7 +8,7 @@ namespace Trichechus.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Tags("Segurança")] // Adiciona uma tag para agrupar endpoints
+[Tags("Perfil")] // Adiciona uma tag para agrupar endpoints
 					// [Authorize(Roles = "GerenciarPerfis")] // *** Protegido por Role/Funcionalidade de Admin ***
 [Authorize]
 public class PerfisController : ControllerBase

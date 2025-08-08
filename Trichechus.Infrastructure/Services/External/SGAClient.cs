@@ -1,13 +1,9 @@
-using System;
-using System.IO;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
 using Microsoft.Extensions.Configuration;
+using Trichechus.Application.Interfaces ;
 
-namespace Trichechus.Infrastructure.Services;
+namespace Trichechus.Infrastructure.Services.External;
 
 public class SGAClient : ISGAClient
 {
@@ -167,19 +163,4 @@ public class SGAClient : ISGAClient
 			};
 		}
 	}
-}
-
-public interface ISGAClient
-{
-	Task<SGAAutenticacaoResult> AutenticarUsuarioAsync(string usuario, string senha, string ipUsuario);
-}
-
-public class SGAAutenticacaoResult
-{
-	public bool Sucesso { get; set; }
-	public string Mensagem { get; set; }
-	public string Nome { get; set; }
-	public string Email { get; set; }
-	public string Perfil { get; set; }
-	public List<string> PerfilDetalhes { get; set; } = new List<string>();
 }
