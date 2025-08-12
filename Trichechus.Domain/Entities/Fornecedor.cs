@@ -19,7 +19,7 @@ public class Fornecedor
 	[Column("Estado", TypeName = "varchar(20)")]
 	public string Estado { get; set; } = "";
 	[Column("Ativo")]
-	public bool Ativo { get; set; } = true;
+	public string Ativo { get; set; } = "Sim";
 
 	public ICollection<Contrato> Contrato { get; set; } = new List<Contrato>();
 }
