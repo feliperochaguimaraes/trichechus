@@ -126,7 +126,7 @@ public class ContratoController : ControllerBase
 	[Authorize(Roles = "T_DEL_CON")]
 	public async Task<IActionResult> Delete(Guid id)
 	{
-		var result = await _contratoService.DeleteSoftContratoAsync(id);
+		var result = await _contratoService.DeleteContratoAsync(id);
 		if (!result.IsSuccess)
 			return NotFound(result.Errors);
 

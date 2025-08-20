@@ -10,6 +10,5 @@ namespace Trichechus.Application.Interfaces
 		Task<Result<Guid>> CreateContratoAsync(CreateContratoDto dto);
 		Task<Result> UpdateContratoAsync(UpdateContratoDto dto);
 		Task<Result> DeleteContratoAsync(Guid id);
-		Task<Result> DeleteSoftContratoAsync(Guid id);
 	}
 }
