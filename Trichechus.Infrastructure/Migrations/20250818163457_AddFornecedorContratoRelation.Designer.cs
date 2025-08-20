@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Trichechus.Infrastructure.Context;
 
@@ -10,9 +11,11 @@ using Trichechus.Infrastructure.Context;
 namespace Trichechus.Infrastructure.Migrations
 {
     [DbContext(typeof(TrichechusDbContext))]
-    partial class TrichechusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250818163457_AddFornecedorContratoRelation")]
+    partial class AddFornecedorContratoRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.15");
@@ -286,8 +289,8 @@ namespace Trichechus.Infrastructure.Migrations
                         .HasColumnName("Cidade");
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("varchar(250)")
-                        .HasColumnName("Descricao");
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("Nome");
 
                     b.Property<string>("Endereco")
                         .IsRequired()
@@ -301,8 +304,7 @@ namespace Trichechus.Infrastructure.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Nome");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Numero")
                         .IsRequired()
@@ -311,7 +313,11 @@ namespace Trichechus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Fornecedor");
+                    b.ToTable("Fornecedor", t =>
+                        {
+                            t.Property("Nome")
+                                .HasColumnName("Nome1");
+                        });
                 });
 
             modelBuilder.Entity("Trichechus.Domain.Entities.Funcionalidade", b =>

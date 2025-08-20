@@ -132,4 +132,38 @@ public class FornecedorController : ControllerBase
 
 		return NoContent();
 	}
+
+	// Endpoints para gerenciar contratos de um fornecedor
+
+	[HttpPost("{fornecedorId}/contratos")]
+	[SwaggerOperation(Summary = "Adiciona um contrato a um fornecedor")]
+	[SwaggerResponse(204, "Contrato adicionado com sucesso")]
+	[SwaggerResponse(400, "IDs inválidos ou associação já existe")]
+	[SwaggerResponse(404, "Fornecedor ou Contrato não encontrado")]
+	[Authorize(Roles = "T_CAD_FOR")]
+	public async Task<IActionResult> AddContrato(Guid fornecedorId, [FromBody] AssociarContratoFornecedorDto dto)
+	{
+		var result = await _fornecedorService.AddContratoAsync(fornecedorId, dto.ContratoId);
+		if (!result.IsSuccess)
+		{
+			if (result.Errors.Any(e => e.Contains("não encontrado")))
+				return NotFound(result.Errors);
+			return BadRequest(result.Errors);
+		}
+		return NoContent();
+	}
+
+	[HttpDelete("{fornecedorId}/contratos/{contratoId}")]
+	[SwaggerOperation(Summary = "Remove um contrato de um fornecedor")]
+	[SwaggerResponse(204, "contrato removido com sucesso")]
+	[SwaggerResponse(404, "Fornecedor ou Contrato não encontrado, ou associação não existe")]
+	[Authorize(Roles = "T_DEL_FOR")]
+	public async Task<IActionResult> RemoveContrato(Guid fornecedorId, Guid contratoId)
+	{
+		// O serviço já lida com 'não encontrado', podemos retornar NoContent diretamente ou verificar o resultado
+		await _fornecedorService.RemoveContratoAsync(fornecedorId, contratoId);
+		return NoContent();
+	}
+
+
 }

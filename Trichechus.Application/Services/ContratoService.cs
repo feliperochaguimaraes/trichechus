@@ -55,6 +55,7 @@ public class ContratoService : IContratoService
 		var fornecedor = new Contrato
 		{
 			NomeAlias = dto.NomeAlias,
+			Numero = dto.Numero,
 			Objeto = dto.Objeto,
 			Ativo = dto.Ativo,
 			Inicio = dto.Inicio,

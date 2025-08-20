@@ -5,6 +5,7 @@ using Trichechus.Application.Interfaces;
 using Trichechus.Domain.Entities;
 using Trichechus.Domain.Interfaces;
 
+
 namespace Trichechus.Application.Services;
 
 public class FornecedorService : IFornecedorService
@@ -13,18 +14,24 @@ public class FornecedorService : IFornecedorService
 	private readonly IValidator<CreateFornecedorDto> _createValidator;
 	private readonly IValidator<UpdateFornecedorDto> _updateValidator;
 	private readonly IUserContext _userContext;
+	private readonly IFornecedorRepository _fornecedorRepository;
+	private readonly IContratoRepository _contratoRepository;
 
 	public FornecedorService(
 		IFornecedorRepository repository,
 		IValidator<CreateFornecedorDto> createValidator,
 		IValidator<UpdateFornecedorDto> updateValidator,
-		IUserContext userContext
+		IUserContext userContext,
+		IFornecedorRepository fornecedorRepository,
+		IContratoRepository contratoRepository
 		)
 	{
+		_fornecedorRepository = fornecedorRepository;
 		_repository = repository;
 		_createValidator = createValidator;
 		_updateValidator = updateValidator;
 		_userContext = userContext;
+		_contratoRepository = contratoRepository;
 	}
 	public async Task<IEnumerable<FornecedorDto>> GetAllFornecedorAsync()
 	{
@@ -114,6 +121,25 @@ public class FornecedorService : IFornecedorService
 		return Result.Success();
 	}
 
+	public async Task<Result> AddContratoAsync(Guid fornecedorId, Guid contratoId)
+	{
+		var fornecedor = await _fornecedorRepository.GetByIdAsync(fornecedorId);
+		var contrato = await _contratoRepository.GetByIdAsync(contratoId);
+
+		if (fornecedor == null) return Result.Failure(new[] { "Fornecedor não encontrado." });
+		if (contrato == null) return Result.Failure(new[] { "Contrato não encontrado." });
+
+		await _fornecedorRepository.AddContratoAsync(fornecedorId, contratoId);
+		return Result.Success();
+	}
+
+	public async Task<Result> RemoveContratoAsync(Guid fornecedorId, Guid contratoId)
+	{
+		// Validações podem ser feitas aqui ou no repositório
+		await _fornecedorRepository.RemoveContratoAsync(fornecedorId, contratoId);
+		return Result.Success();
+	}
+
 	public async Task<Result> DeleteSoftFornecedorAsync(Guid id)
 	{
 		var fornecedor = await _repository.GetByIdAsync(id);
@@ -121,7 +147,7 @@ public class FornecedorService : IFornecedorService
 		{
 			return Result.Failure(new List<string> { "Fornecedor não encontrada." });
 		}
-		
+
 		await _repository.UpdateAsync(fornecedor);
 		return Result.Success();
 	}
@@ -138,7 +164,15 @@ public class FornecedorService : IFornecedorService
 			Cep = fornecedor.Cep,
 			Cidade = fornecedor.Cidade,
 			Estado = fornecedor.Estado,
-			Ativo = fornecedor.Ativo
+			Ativo = fornecedor.Ativo,
+			Contratos = fornecedor.Contrato? // Mapeia contratos para serem carregados
+					.Select(f => new ContratoDto { Id = f.Id, NomeAlias = f.NomeAlias, Numero = f.Numero })
+					.ToList()
 		};
 	}
 }
+	
+
+
+
+

@@ -11,5 +11,7 @@ namespace Trichechus.Application.Interfaces
 		Task<Result> UpdateFornecedorAsync(UpdateFornecedorDto dto);
 		Task<Result> DeleteFornecedorAsync(Guid id);
 		Task<Result> DeleteSoftFornecedorAsync(Guid id);
-	}
+		Task<Result> AddContratoAsync(Guid fornecedorId, Guid contratoId);
+		Task <Result> RemoveContratoAsync(Guid fornecedorId, Guid contratoId);
+    }
 }

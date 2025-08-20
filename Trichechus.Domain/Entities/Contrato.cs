@@ -6,9 +6,12 @@ public class Contrato
 	public Guid Id { get; set; } = Guid.NewGuid();
 	[Column("NomeAlias", TypeName = "varchar(20)")]
 	public string NomeAlias { get; set; } = "";
+	[Column("Numero", TypeName = "varchar(12)")]
+	public string Numero { get; set; } = string.Empty;
+	
 	[Column("Objeto", TypeName = "Text")]
 	public string Objeto { get; set; } = "";
-	public bool Ativo { get; set; } = true;
+	public string Ativo { get; set; } = "";
 
 	[Column("Inicio", TypeName = "DateTime2")]
 	public DateTime Inicio { get; set; }

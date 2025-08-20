@@ -12,4 +12,3 @@ public interface IContratoRepository
 	Task UpdateAsync(Contrato contrato);
 	Task DeleteAsync(Guid id);
 }
-

@@ -11,4 +11,6 @@ public interface IFornecedorRepository
 	Task AddAsync(Fornecedor fornecedor);
 	Task UpdateAsync(Fornecedor fornecedor);
 	Task DeleteAsync(Guid id);
+	Task AddContratoAsync(Guid fornecedorId, Guid contratoId);
+	Task RemoveContratoAsync(Guid fornecedorId, Guid contratoId);
 }
