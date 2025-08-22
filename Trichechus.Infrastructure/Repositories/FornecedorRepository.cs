@@ -83,4 +83,9 @@ public class FornecedorRepository : IFornecedorRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public Task<Fornecedor> GetByIdWithContratosAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }

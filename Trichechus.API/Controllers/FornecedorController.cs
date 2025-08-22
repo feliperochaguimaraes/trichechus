@@ -28,23 +28,49 @@ public class FornecedorController : ControllerBase
 	// [SwaggerResponse(200, "Lista de fornecedor retornada com sucesso", typeof(IEnumerable<FornecedorDTO>))]
 	// [SwaggerResponse(401, "Não autorizado")]
 	// [AllowAnonymous]
+	// [Authorize(Roles = "T_LIS_FOR")]
+	// public async Task<IActionResult> GetFornecedorAll()
+	// {
+	// 	try
+	// 	{
+	// 		Console.WriteLine("➡️  Iniciando GetAll");
+
+	// 		var fornecedor = await _fornecedorService.GetAllAsync();
+
+	// 		Console.WriteLine("✅ Sucesso no GetAll");
+	// 		return Ok(fornecedor);
+	// 	}
+	// 	catch (Exception ex)
+	// 	{
+	// 		Console.WriteLine("❌ Erro em GetAll: " + ex.Message);
+	// 		Console.WriteLine(ex.StackTrace);
+	// 		return StatusCode(500, "Erro interno no servidor: " + ex.Message);
+	// 	}
+	// }
+	[HttpGet]
+	[SwaggerOperation(Summary = "Obtém todos os fornecedores", Description = "Retorna uma lista com todos os fornecedores cadastrados")]
+	[SwaggerResponse(200, "Lista de fornecedor retornada com sucesso", typeof(IEnumerable<FornecedorDto>))]
+	[SwaggerResponse(401, "Não autorizado")]
+	[AllowAnonymous]
 	[Authorize(Roles = "T_LIS_FOR")]
-	public async Task<IActionResult> GetAll()
+	public async Task<IActionResult> GetFornecedorAll()
 	{
 		try
 		{
-			Console.WriteLine("➡️  Iniciando GetAll");
+			var result = await _fornecedorService.GetAllAsync();
 
-			var fornecedor = await _fornecedorService.GetAllFornecedorAsync();
+			if (!result.IsSuccess)
+				return BadRequest(result.Errors);
 
-			Console.WriteLine("✅ Sucesso no GetAll");
-			return Ok(fornecedor);
+			
+			var lista = result.Value ?? Enumerable.Empty<FornecedorDto>();
+			return Ok(lista); 
 		}
 		catch (Exception ex)
 		{
 			Console.WriteLine("❌ Erro em GetAll: " + ex.Message);
 			Console.WriteLine(ex.StackTrace);
-			return StatusCode(500, "Erro interno no servidor: " + ex.Message);
+			return Problem(title: "Erro interno no servidor", detail: ex.Message, statusCode: 500);
 		}
 	}
 
@@ -126,7 +152,7 @@ public class FornecedorController : ControllerBase
 	[Authorize(Roles = "T_DEL_FOR")]
 	public async Task<IActionResult> Delete(Guid id)
 	{
-		var result = await _fornecedorService.DeleteSoftFornecedorAsync(id);
+		var result = await _fornecedorService.DeleteFornecedorAsync(id);
 		if (!result.IsSuccess)
 			return NotFound(result.Errors);
 

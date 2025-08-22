@@ -28,19 +28,19 @@ public class ContratoService : IContratoService
 	}
 	public async Task<IEnumerable<ContratoDto>> GetAllContratoAsync()
 	{
-		var fornecedor = await _repository.GetAllAsync();
-		return fornecedor.Select(a => MapToDTO(a));
+		var contrato = await _repository.GetAllAsync();
+		return contrato.Select(a => MapToDTO(a));
 	}
 
 	public async Task<Result<ContratoDto>> GetContratoByIdAsync(Guid id)
 	{
-		var fornecedor = await _repository.GetByIdAsync(id);
-		if (fornecedor == null)
+		var contrato = await _repository.GetByIdAsync(id);
+		if (contrato == null)
 		{
-			return Result<ContratoDto>.Failure(new List<string> { "Contrato não encontrada." });
+			return Result<ContratoDto>.Failure(new List<string> { "Contrato não encontrado." });
 		}
 
-		return Result<ContratoDto>.Success(MapToDTO(fornecedor));
+		return Result<ContratoDto>.Success(MapToDTO(contrato));
 	}
 	public async Task<Result<Guid>> CreateContratoAsync(CreateContratoDto dto)
 	{
@@ -52,18 +52,22 @@ public class ContratoService : IContratoService
 			return Result<Guid>.Failure(validationResult.Errors.Select(e => e.ErrorMessage).ToList());
 		}
 
-		var fornecedor = new Contrato
+		var contrato = new Contrato
 		{
 			NomeAlias = dto.NomeAlias,
 			Numero = dto.Numero,
 			Objeto = dto.Objeto,
 			Ativo = dto.Ativo,
 			Inicio = dto.Inicio,
-			Fim = dto.Fim
+			Fim = dto.Fim,
+			AreaGestora = dto.AreaGestora,
+			Gerencia = dto.Gerencia
+
+
 		};
 
-		await _repository.AddAsync(fornecedor);
-		return Result<Guid>.Success(fornecedor.Id);
+		await _repository.AddAsync(contrato);
+		return Result<Guid>.Success(contrato.Id);
 	}
 
 	public async Task<Result> UpdateContratoAsync(UpdateContratoDto dto)
@@ -76,61 +80,51 @@ public class ContratoService : IContratoService
 			return Result.Failure(validationResult.Errors.Select(e => e.ErrorMessage).ToList());
 		}
 
-		var fornecedor = await _repository.GetByIdAsync(dto.Id);
-		if (fornecedor == null)
+		var contrato = await _repository.GetByIdAsync(dto.Id);
+		if (contrato == null)
 		{
 			return Result.Failure(new List<string> { "Contrato não encontrada." });
 		}
 
-		fornecedor.NomeAlias = dto.NomeAlias;
-		fornecedor.Objeto = dto.Objeto;
-		fornecedor.Ativo = dto.Ativo;
-		fornecedor.Inicio = dto.Inicio;
-		fornecedor.Fim = dto.Fim;
-
-		await _repository.UpdateAsync(fornecedor);
+		contrato.NomeAlias = dto.NomeAlias;
+		contrato.Numero = dto.Numero;
+		contrato.Objeto = dto.Objeto;
+		contrato.Ativo = dto.Ativo;
+		contrato.Inicio = dto.Inicio;
+		contrato.Fim = dto.Fim;
+		contrato.AreaGestora = dto.AreaGestora;
+		contrato.Gerencia = dto.Gerencia;
+		await _repository.UpdateAsync(contrato);
 		return Result.Success();
 	}
 
 	public async Task<Result> DeleteContratoAsync(Guid id)
 	{
-		var fornecedor = await _repository.GetByIdAsync(id);
-		if (fornecedor == null)
+		var contrato = await _repository.GetByIdAsync(id);
+		if (contrato == null)
 		{
 			return Result.Failure(new List<string> { "Contrato não encontrada." });
 		}
 
-		// Soft delete
-		// fornecedor.DeletadoEm = DateTime.Now;
-		// await _repository.UpdateAsync(fornecedor);
-
-		// Ou hard delete
+		
 		await _repository.DeleteAsync(id);
 		return Result.Success();
 	}
 
-	public async Task<Result> DeleteSoftContratoAsync(Guid id)
-	{
-		var fornecedor = await _repository.GetByIdAsync(id);
-		if (fornecedor == null)
-		{
-			return Result.Failure(new List<string> { "Contrato não encontrada." });
-		}
-
-		await _repository.UpdateAsync(fornecedor);
-		return Result.Success();
-	}
-
-	private ContratoDto MapToDTO(Contrato fornecedor)
+	private ContratoDto MapToDTO(Contrato contrato)
 	{
 		return new ContratoDto
 		{
-			Id = fornecedor.Id,
-			NomeAlias = fornecedor.NomeAlias,
-			Objeto = fornecedor.Objeto,
-			Inicio = fornecedor.Inicio,
-			Fim = fornecedor.Fim,
-			Ativo = fornecedor.Ativo
+			Id = contrato.Id,
+			NomeAlias = contrato.NomeAlias,
+			Numero = contrato.Numero,
+			Objeto = contrato.Objeto,
+			Ativo = contrato.Ativo,
+			Inicio = contrato.Inicio,
+			Fim = contrato.Fim,
+			AreaGestora = contrato.AreaGestora,
+			Gerencia = contrato.Gerencia
+			
 		};
 	}
 }

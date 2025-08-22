@@ -27,4 +27,9 @@ public class Contrato
 
 	public ICollection<Fornecedor> Fornecedor { get; set; } = new List<Fornecedor>();
 	public ICollection<Software> Software { get; set; } = new List<Software>();
+
+    // public static IEnumerable<Trichechus.Application.DTOs.ContratoDto> Select(Func<object, Trichechus.Application.DTOs.ContratoDto> value)
+    // {
+    //     throw new NotImplementedException();
+    // }
 }

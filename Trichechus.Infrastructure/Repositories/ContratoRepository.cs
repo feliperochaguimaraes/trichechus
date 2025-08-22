@@ -50,13 +50,5 @@ public class ContratoRepository : IContratoRepository
 		}
 	}
 
-	public async Task DeleteSoftAsync(Guid id)
-	{
-		var fornecedor = await _context.Contrato.FindAsync(id);
-		if (fornecedor != null)
-		{
-			_context.Contrato.Update(fornecedor);
-			await _context.SaveChangesAsync();
-		}
-	}
+	
 }
