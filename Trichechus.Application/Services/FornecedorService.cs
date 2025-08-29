@@ -34,66 +34,39 @@ public class FornecedorService : IFornecedorService
 		_contratoRepository = contratoRepository;
 	}
 
-
-
-	public async Task<Result<FornecedorDto>> GetFornecedorByIdAsync(Guid id)
-	{
-		var fornecedor = await _FornecedorRepository.GetByIdAsync(id);
-		if (fornecedor == null)
+	public async Task<Result<FornecedorDto>> GetByIdAsync(Guid id)
 		{
-			return Result<FornecedorDto>.Failure(new List<string> { "Fornecedor não encontrada." });
-		}
+			var fornecedor = await _FornecedorRepository.GetByIdWithContratosAsync(id);
+			if (fornecedor == null)
+			{
+				return Result<FornecedorDto>.Failure(new[] { "Fornecedor não encontrado." });
+			}
 
-		return Result<FornecedorDto>.Success(MapToDTO(fornecedor));
-	}
+			var dto = MapToDTO(fornecedor);
+			return Result<FornecedorDto>.Success(dto);
+		}
 
 	public async Task<Result<IEnumerable<FornecedorDto>>> GetAllAsync()
 	{
 		var fornecedores = await _FornecedorRepository.GetAllAsync();
-		// Mapear para DTO (sem funcionalidades para performance, ou carregar se necessário)
-		var dtos = fornecedores.Select(p => new FornecedorDto { Id = p.Id, Nome = p.Nome, CPFCNPJ = p.CPFCNPJ });
+
+
+		var dtos = fornecedores.Select(a => MapToDTO(a));
+
 		return Result<IEnumerable<FornecedorDto>>.Success(dtos);
 	}
 
-	// public async Task<Result<Guid>> CreateFornecedorAsync(CreateFornecedorDto dto)
+	public async Task<Result<FornecedorDto>> GetFornecedorByIdAsync(Guid id)
+	{
+		var fornecedor = await _FornecedorRepository.GetByIdWithContratosAsync(id);
+		if (fornecedor == null)
+		{
+			return Result<FornecedorDto>.Failure(new List<string> { "Contrato não encontrado." });
+		}
+		return Result<FornecedorDto>.Success(MapToDTO(fornecedor));
+	}
 
-	// {
-	// 	// A validação já será feita automaticamente pelo FluentValidation
-	// 	// Este código é apenas para demonstração de como você poderia fazer validação manual
-	// 	var validationResult = await _createValidator.ValidateAsync(dto);
-	// 	if (!validationResult.IsValid)
-	// 	{
-	// 		return Result<Guid>.Failure(validationResult.Errors.Select(e => e.ErrorMessage).ToList());
-	// 	}
 
-	// 	var fornecedor = new Fornecedor
-	// 	{
-	// 		Nome = dto.Nome,
-	// 		CPFCNPJ = dto.CPFCNPJ,
-	// 		Endereco = dto.Endereco,
-	// 		Numero = dto.Numero,
-	// 		Cep = dto.Cep,
-	// 		Cidade = dto.Cidade,
-	// 		Estado = dto.Estado,
-	// 		Ativo = dto.Ativo
-	// 	};
-	// 	if (dto.ContratoIds != null)
-	// 		{
-	// 			foreach (var contId in dto.ContratoIds)
-	// 			{
-	// 				var contrato = await _contratoRepository.GetByIdAsync(contId);
-	// 				if (contrato != null)
-	// 				{
-	// 					fornecedor.Contrato.Add(contrato);
-	// 				}
-	// 				// Opcional: retornar erro se funcionalidade não existir
-	// 			}
-	// 		}
-
-	// 	await _FornecedorRepository.UpdateAsync(fornecedor);
-	// 		var resultDto = MapToDTO(fornecedor);
-	// 		return Result<FornecedorDto>.Success(resultDto);
-	// }
 	public async Task<Result<Guid>> CreateFornecedorAsync(CreateFornecedorDto dto)
 	{
 		var validationResult = await _createValidator.ValidateAsync(dto);
@@ -128,11 +101,7 @@ public class FornecedorService : IFornecedorService
 
 			}
 		}
-
-
 		await _FornecedorRepository.AddAsync(fornecedor);
-
-
 		return Result<Guid>.Success(fornecedor.Id);
 	}
 
@@ -161,7 +130,7 @@ public class FornecedorService : IFornecedorService
 		fornecedor.Estado = dto.Estado;
 		fornecedor.Ativo = dto.Ativo;
 
-		// Atualizar funcionalidades (exemplo simples: substitui todas)
+		// Atualizar contratos (exemplo simples: substitui todas)
 		if (dto.ContratoIds != null)
 		{
 			fornecedor.Contrato.Clear();
@@ -178,7 +147,6 @@ public class FornecedorService : IFornecedorService
 		await _FornecedorRepository.UpdateAsync(fornecedor);
 		var resultDto = MapToDTO(fornecedor);
 		return Result<FornecedorDto>.Success(resultDto);
-		// return Result.Success();
 
 	}
 
@@ -227,11 +195,12 @@ public class FornecedorService : IFornecedorService
 			Estado = fornecedor.Estado,
 			Ativo = fornecedor.Ativo,
 			Contratos = fornecedor.Contrato? // Mapeia contratos para serem carregados
-					.Select(f => new ContratoDto { Id = f.Id, NomeAlias = f.NomeAlias, Numero = f.Numero })
-					.ToList()
+				.Select(f => new ContratoDto { Id = f.Id, NomeAlias = f.NomeAlias, Numero = f.Numero })
+				.ToList()
 		};
 	}
 
+   
 }
 
 

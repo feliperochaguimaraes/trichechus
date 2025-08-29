@@ -24,30 +24,6 @@ public class FornecedorController : ControllerBase
 	/// </summary>
 	/// <returns>Lista de Fornecedores</returns>
 	[HttpGet]
-	// [SwaggerOperation(Summary = "Obtém todos os fornecedores", Description = "Retorna uma lista com todos os fornecedores cadastrados")]
-	// [SwaggerResponse(200, "Lista de fornecedor retornada com sucesso", typeof(IEnumerable<FornecedorDTO>))]
-	// [SwaggerResponse(401, "Não autorizado")]
-	// [AllowAnonymous]
-	// [Authorize(Roles = "T_LIS_FOR")]
-	// public async Task<IActionResult> GetFornecedorAll()
-	// {
-	// 	try
-	// 	{
-	// 		Console.WriteLine("➡️  Iniciando GetAll");
-
-	// 		var fornecedor = await _fornecedorService.GetAllAsync();
-
-	// 		Console.WriteLine("✅ Sucesso no GetAll");
-	// 		return Ok(fornecedor);
-	// 	}
-	// 	catch (Exception ex)
-	// 	{
-	// 		Console.WriteLine("❌ Erro em GetAll: " + ex.Message);
-	// 		Console.WriteLine(ex.StackTrace);
-	// 		return StatusCode(500, "Erro interno no servidor: " + ex.Message);
-	// 	}
-	// }
-	[HttpGet]
 	[SwaggerOperation(Summary = "Obtém todos os fornecedores", Description = "Retorna uma lista com todos os fornecedores cadastrados")]
 	[SwaggerResponse(200, "Lista de fornecedor retornada com sucesso", typeof(IEnumerable<FornecedorDto>))]
 	[SwaggerResponse(401, "Não autorizado")]
@@ -75,21 +51,21 @@ public class FornecedorController : ControllerBase
 	}
 
 	/// <summary>
-	/// Obtém uma fornecedor pelo ID
+	/// Obtém um fornecedor pelo ID incluindo contratos
 	/// </summary>
 	/// <param name="id">ID do fornecedor</param>
 	/// <returns>Dados do fornecedor</returns>
-	[HttpGet("{id}")]
-	[SwaggerOperation(Summary = "Obtém um fornecedor pelo ID", Description = "Retorna os dados de um fornecedor específico")]
-	[SwaggerResponse(200, "Fornecedor encontrado com sucesso", typeof(FornecedorDto))]
+	
+	[HttpGet("{id:guid}")]
+	[SwaggerOperation(Summary = "Obtém um fornecedor pelo ID, incluindo contratos")]
+	[SwaggerResponse(200, "Fornecedor encontrado", typeof(FornecedorDto))]
+	[SwaggerResponse(403, "Não Autorizado")]
 	[SwaggerResponse(404, "Fornecedor não encontrado")]
 	[Authorize(Roles = "T_LIS_FOR")]
 	public async Task<IActionResult> GetById(Guid id)
 	{
-		var result = await _fornecedorService.GetFornecedorByIdAsync(id);
-		if (!result.IsSuccess)
-			return NotFound(result.Errors);
-
+		var result = await _fornecedorService.GetByIdAsync(id);
+		if (!result.IsSuccess) return NotFound(result.Errors);
 		return Ok(result.Value);
 	}
 
@@ -99,8 +75,8 @@ public class FornecedorController : ControllerBase
 	/// <param name="dto">Dados do fornecedor</param>
 	/// <returns>ID do fornecedor criada</returns>
 	[HttpPost]
-	[SwaggerOperation(Summary = "Cria um novo fornecedor", Description = "Cria uma novo fornecedor com os dados fornecidos")]
-	[SwaggerResponse(201, "Fornecedor criada com sucesso", typeof(Guid))]
+	[SwaggerOperation(Summary = "Cria um novo fornecedor", Description = "Cria um novo fornecedor com os dados fornecidos")]
+	[SwaggerResponse(201, "Fornecedor criado com sucesso", typeof(Guid))]
 	[SwaggerResponse(400, "Dados inválidos")]
 	[SwaggerResponse(401, "Não autorizado")]
 	[Authorize(Roles = "T_CAD_FOR")]

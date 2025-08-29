@@ -5,6 +5,7 @@ namespace Trichechus.Application.Interfaces
 {
 	public interface IFornecedorService
 	{
+		Task<Result<FornecedorDto>> GetByIdAsync(Guid id);
 		Task<Result<IEnumerable<FornecedorDto>>> GetAllAsync();
 		Task<Result<FornecedorDto>> GetFornecedorByIdAsync(Guid id);
 		Task<Result<Guid>> CreateFornecedorAsync(CreateFornecedorDto dto);
