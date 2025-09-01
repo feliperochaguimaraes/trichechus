@@ -21,5 +21,5 @@ public class BaseDados
 	[Column("Versao", TypeName = "varchar(30)")]
 	public required string Versao { get; set; }
 	
-	public ICollection<Software>? Software { get; set; } = null;
+	public ICollection<Software> Software { get; set; } =  new List<Software>();
 }
