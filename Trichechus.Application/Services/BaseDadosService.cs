@@ -52,7 +52,7 @@ public class BaseDadosService : IBaseDadosService
 
 	public async Task<Result<BaseDadosDto>> GetBaseDadosByIdAsync(Guid id)
 	{
-		var basedados = await _BaseDadosRepository.GetByIdAsync(id);
+		var basedados = await _BaseDadosRepository.GetByIdWithSoftwareAsync(id);
 		if (basedados == null)
 		{
 			return Result<BaseDadosDto>.Failure(new List<string> { "BaseDados não encontrada." });
@@ -60,6 +60,8 @@ public class BaseDadosService : IBaseDadosService
 
 		return Result<BaseDadosDto>.Success(MapToDTO(basedados));
 	}
+	
+	
 	public async Task<Result<Guid>> CreateBaseDadosAsync(CreateBaseDadosDto dto)
 	{
 		// A validação já será feita automaticamente pelo FluentValidation

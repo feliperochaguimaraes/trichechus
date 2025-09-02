@@ -17,17 +17,16 @@ public class BaseDadosController : ControllerBase
 {
     private readonly IBaseDadosService _baseDadosService;
 
-    public IBaseDadosService BaseDadosService => _baseDadosService;
-
     public BaseDadosController(IBaseDadosService baseDadosService)
     {
         _baseDadosService = baseDadosService;
     }
+    
     /// <summary>
-	/// Obtém todas as bases de dados
-	/// </summary>
-	/// <returns>Lista da base de dados</returns>
-	[HttpGet]
+    /// Obtém todas as bases de dados
+    /// </summary>
+    /// <returns>Lista da base de dados</returns>
+    [HttpGet]
     [SwaggerOperation(Summary = "Obtém todas as bases de dados", Description = "Retorna uma lista com todas bases de dados cadastradas")]
     [SwaggerResponse(200, "Lista de base de dados retornada com sucesso", typeof(IEnumerable<BaseDadosDto>))]
     [SwaggerResponse(401, "Não autorizado")]
@@ -65,9 +64,11 @@ public class BaseDadosController : ControllerBase
     [Authorize(Roles = "T_LIS_BAS")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var result = await BaseDadosService.GetBaseDadosByIdAsync(id);
-        if (!result.IsSuccess) return NotFound(result.Errors);
-        return Ok(result.Value);
+        var result = await _baseDadosService.GetBaseDadosByIdAsync(id);
+		if (!result.IsSuccess)
+			return NotFound(result.Errors);
+
+		return Ok(result.Value);
     }
 
     /// <summary>
@@ -125,7 +126,7 @@ public class BaseDadosController : ControllerBase
     // Adicionar validação de dependência no serviço antes de excluir
     public async Task<IActionResult> Delete(Guid id)
     {
-        var result = await BaseDadosService.DeleteBaseDadosAsync(id);
+        var result = await _baseDadosService.DeleteBaseDadosAsync(id);
         if (!result.IsSuccess) return NotFound(result.Errors);
         return NoContent();
     }
@@ -140,7 +141,7 @@ public class BaseDadosController : ControllerBase
     [Authorize(Roles = "T_CAD_SOF")]
     public async Task<IActionResult> AddSoftware(Guid baseDadosId, [FromBody] AssociarSoftwareBaseDadosDto dto)
     {
-        var result = await BaseDadosService.AddSoftBaseDadosAsync(baseDadosId, dto.SoftwareId);
+        var result = await _baseDadosService.AddSoftBaseDadosAsync(baseDadosId, dto.SoftwareId);
         if (!result.IsSuccess)
         {
             if (result.Errors.Any(e => e.Contains("não encontrado")))

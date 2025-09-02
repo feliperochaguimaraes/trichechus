@@ -34,11 +34,11 @@ public class UpdateBaseDadosDto
 	public string Cluster { get; set; } = "";
 	public string NomeBaseDados { get; set; } = "";
 	public string Versao { get; set; } = "";
-	// Opcional: Lista de IDs de funcionalidades para associar ao perfil
+	// Opcional: Lista de IDs de Softwares para associar a uma base de dados
 	public List<Guid>? SoftwareIds { get; set; }
 }
 
-// DTO para associar/desassociar funcionalidade de um perfil
+// DTO para associar/desassociar Software de uma base de dados
 public class AssociarSoftwareBaseDadosDto 
 {
 	[Required]
