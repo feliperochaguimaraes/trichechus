@@ -37,4 +37,6 @@ public class Catalogo
 
 	[Column("Observacao", TypeName = "Text")]
 	public string? Observacao { get; set; } = null;
+
+	public ICollection<Software> Software { get; set; } = new List<Software>();
 }

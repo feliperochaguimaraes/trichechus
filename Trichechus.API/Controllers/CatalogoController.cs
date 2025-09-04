@@ -24,30 +24,54 @@ public class CatalogoController : ControllerBase
 	/// Obtém todos os catalogos
 	/// </summary>
 	/// <returns>Lista de Cataloges</returns>
+	// [HttpGet]
+	// [SwaggerOperation(Summary = "Obtém todos os catalogos", Description = "Retorna uma lista com todos os catalogos cadastrados")]
+	// [SwaggerResponse(200, "Lista de catalogo retornada com sucesso", typeof(IEnumerable<CatalogoDto>))]
+	// [SwaggerResponse(401, "Não autorizado")]
+	// [SwaggerResponse(404, "Catalogo não encontrado")]
+	// [Authorize(Roles = "T_LIS_CAT")]
+	// public async Task<IActionResult> GetAll()
+	// {
+	// 	try
+	// 	{
+	// 		Console.WriteLine("➡️  Iniciando GetAll");
+
+	// 		var catalogo = await _catalogoService.GetAllCatalogoAsync();
+
+	// 		Console.WriteLine("✅ Sucesso no GetAll");
+	// 		return Ok(catalogo);
+	// 	}
+	// 	catch (Exception ex)
+	// 	{
+	// 		Console.WriteLine("❌ Erro em GetAll: " + ex.Message);
+	// 		Console.WriteLine(ex.StackTrace);
+	// 		return StatusCode(500, "Erro interno no servidor: " + ex.Message);
+	// 	}
+	// }
 	[HttpGet]
-	[SwaggerOperation(Summary = "Obtém todos os catalogos", Description = "Retorna uma lista com todos os catalogos cadastrados")]
-	[SwaggerResponse(200, "Lista de catalogo retornada com sucesso", typeof(IEnumerable<CatalogoDto>))]
-	[SwaggerResponse(401, "Não autorizado")]
-	[SwaggerResponse(404, "Catalogo não encontrado")]
-	[Authorize(Roles = "T_LIS_CAT")]
-	public async Task<IActionResult> GetAll()
-	{
-		try
-		{
-			Console.WriteLine("➡️  Iniciando GetAll");
+    [SwaggerOperation(Summary = "Obtém todos os catalogos", Description = "Retorna uma lista com todos os catalogos cadastrados")]
+    [SwaggerResponse(200, "Lista de catalogos retornada com sucesso", typeof(IEnumerable<CatalogoDto>))]
+    [SwaggerResponse(401, "Não autorizado")]
+    [AllowAnonymous]
+    [Authorize(Roles = "T_LIS_CAT")]
+    public async Task<IActionResult> GetCatalogoAll()
+    {
+        try
+        {
+            var result = await _catalogoService.GetAllCatalogoAsync();
 
-			var catalogo = await _catalogoService.GetAllCatalogoAsync();
-
-			Console.WriteLine("✅ Sucesso no GetAll");
-			return Ok(catalogo);
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine("❌ Erro em GetAll: " + ex.Message);
-			Console.WriteLine(ex.StackTrace);
-			return StatusCode(500, "Erro interno no servidor: " + ex.Message);
-		}
-	}
+            if (!result.IsSuccess)
+                return BadRequest(result.Errors);
+            var lista = result.Value ?? Enumerable.Empty<CatalogoDto>();
+            return Ok(lista);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Erro em GetAll: " + ex.Message);
+            Console.WriteLine(ex.StackTrace);
+            return Problem(title: "Erro interno no servidor", detail: ex.Message, statusCode: 500);
+        }
+    }
 
 	/// <summary>
 	/// Obtém uma catalogo pelo ID
@@ -86,7 +110,7 @@ public class CatalogoController : ControllerBase
 		var result = await _catalogoService.CreateCatalogoAsync(dto);
 		if (!result.IsSuccess)
 			return BadRequest(result.Errors);
-	// Retorna a funcionalidade criada com o ID
+		// Retorna a funcionalidade criada com o ID
 		return CreatedAtAction(nameof(GetById), new { id = result.Value }, result.Value);
 	}
 
@@ -132,6 +156,40 @@ public class CatalogoController : ControllerBase
 		if (!result.IsSuccess)
 			return NotFound(result.Errors);
 
+		return NoContent();
+	}
+
+
+// Endpoints para gerenciar software de uma catalogo
+
+    [HttpPost("{catalogoId}/software")]
+	[SwaggerOperation(Summary = "Adiciona um software a um catalogo")]
+	[SwaggerResponse(204, "Software adicionado com sucesso")]
+	[SwaggerResponse(400, "IDs inválidos ou associação já existe")]
+	[SwaggerResponse(404, "Catalogo ou software não encontrado")]
+	[Authorize(Roles = "T_CAD_SOF")]
+	public async Task<IActionResult> AddSoftware(Guid catalogoId, [FromBody] AssociarSoftwareCatalogoDto dto)
+	{
+		var result = await _catalogoService.AddSoftCatalogoAsync(catalogoId, dto.SoftwareId);
+		if (!result.IsSuccess)
+		{
+			if (result.Errors.Any(e => e.Contains("não encontrado")))
+				return NotFound(result.Errors);
+			return BadRequest(result.Errors);
+		}
+		return NoContent();
+	}
+
+
+	[HttpDelete("{catalogoId}/software/{SoftwareId}")]
+	[SwaggerOperation(Summary = "Remove um catalogo de um software")]
+	[SwaggerResponse(204, "Catalogo removido com sucesso")]
+	[SwaggerResponse(404, "Catalogo ou software não encontrado, ou associação não existe")]
+	[Authorize(Roles = "T_DEL_BAS")]
+	public async Task<IActionResult> RemoveSoftware(Guid catalogoId, Guid softwareId)
+	{
+		// O serviço já lida com 'não encontrado', podemos retornar NoContent diretamente ou verificar o resultado
+		await _catalogoService.DeleteSoftCatalogoAsync(catalogoId, softwareId);
 		return NoContent();
 	}
 }
