@@ -3,7 +3,7 @@ using Trichechus.Application.DTOs;
 
 namespace Trichechus.Application.Validators
 {
-	public class UpdateURLDtoValidator : AbstractValidator<UpdateURLDto>
+	public class UpdateURLDtoValidator : AbstractValidator<UpdateUrlDto>
 	{
 		public UpdateURLDtoValidator()
 		{

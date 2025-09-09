@@ -24,4 +24,6 @@ public class URL
 	[StringLength(20)]
 	[Column("IP", TypeName = "varchar(20)")]
 	public required string IP { get; set; }
+
+	public ICollection<Software> Software { get; set; } = new List<Software>();
 }

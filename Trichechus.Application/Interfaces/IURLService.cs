@@ -5,11 +5,13 @@ namespace Trichechus.Application.Interfaces
 {
 	public interface IURLService
 	{
-		Task<IEnumerable<URLDto>> GetAllURLAsync();
-		Task<Result<URLDto>> GetURLByIdAsync(Guid id);
-		Task<Result<Guid>> CreateURLAsync(CreateURLDto dto);
-		Task<Result> UpdateURLAsync(UpdateURLDto dto);
-		Task<Result> DeleteURLAsync(Guid id);
-		Task<Result> DeleteSoftURLAsync(Guid id);
+		Task<Result<UrlDto>> GetByIdAsync(Guid id);
+		Task<Result<IEnumerable<UrlDto>>> GetAllUrlAsync();
+		Task<Result<UrlDto>> GetUrlByIdAsync(Guid id);
+		Task<Result<Guid>> CreateUrlAsync(CreateUrlDto dto);
+		Task<Result> UpdateUrlAsync(UpdateUrlDto dto);
+		Task<Result> DeleteUrlAsync(Guid id);
+		Task<Result> AddSoftUrlAsync(Guid urlId, Guid softwareId);
+		Task<Result> DeleteSoftUrlAsync(Guid urlId, Guid softwareId);
 	}
 }
