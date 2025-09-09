@@ -24,46 +24,48 @@ public class FornecedorController : ControllerBase
 	/// </summary>
 	/// <returns>Lista de Fornecedores</returns>
 	[HttpGet]
-	// [SwaggerOperation(Summary = "Obtém todos os fornecedores", Description = "Retorna uma lista com todos os fornecedores cadastrados")]
-	// [SwaggerResponse(200, "Lista de fornecedor retornada com sucesso", typeof(IEnumerable<FornecedorDTO>))]
-	// [SwaggerResponse(401, "Não autorizado")]
-	// [AllowAnonymous]
+	[SwaggerOperation(Summary = "Obtém todos os fornecedores", Description = "Retorna uma lista com todos os fornecedores cadastrados")]
+	[SwaggerResponse(200, "Lista de fornecedor retornada com sucesso", typeof(IEnumerable<FornecedorDto>))]
+	[SwaggerResponse(401, "Não autorizado")]
+	[AllowAnonymous]
 	[Authorize(Roles = "T_LIS_FOR")]
-	public async Task<IActionResult> GetAll()
+	public async Task<IActionResult> GetFornecedorAll()
 	{
 		try
 		{
-			Console.WriteLine("➡️  Iniciando GetAll");
+			var result = await _fornecedorService.GetAllAsync();
 
-			var fornecedor = await _fornecedorService.GetAllFornecedorAsync();
+			if (!result.IsSuccess)
+				return BadRequest(result.Errors);
 
-			Console.WriteLine("✅ Sucesso no GetAll");
-			return Ok(fornecedor);
+			
+			var lista = result.Value ?? Enumerable.Empty<FornecedorDto>();
+			return Ok(lista); 
 		}
 		catch (Exception ex)
 		{
 			Console.WriteLine("❌ Erro em GetAll: " + ex.Message);
 			Console.WriteLine(ex.StackTrace);
-			return StatusCode(500, "Erro interno no servidor: " + ex.Message);
+			return Problem(title: "Erro interno no servidor", detail: ex.Message, statusCode: 500);
 		}
 	}
 
 	/// <summary>
-	/// Obtém uma fornecedor pelo ID
+	/// Obtém um fornecedor pelo ID incluindo contratos
 	/// </summary>
 	/// <param name="id">ID do fornecedor</param>
 	/// <returns>Dados do fornecedor</returns>
-	[HttpGet("{id}")]
-	[SwaggerOperation(Summary = "Obtém um fornecedor pelo ID", Description = "Retorna os dados de um fornecedor específico")]
-	[SwaggerResponse(200, "Fornecedor encontrado com sucesso", typeof(FornecedorDto))]
+	
+	[HttpGet("{id:guid}")]
+	[SwaggerOperation(Summary = "Obtém um fornecedor pelo ID, incluindo contratos")]
+	[SwaggerResponse(200, "Fornecedor encontrado", typeof(FornecedorDto))]
+	[SwaggerResponse(403, "Não Autorizado")]
 	[SwaggerResponse(404, "Fornecedor não encontrado")]
 	[Authorize(Roles = "T_LIS_FOR")]
 	public async Task<IActionResult> GetById(Guid id)
 	{
-		var result = await _fornecedorService.GetFornecedorByIdAsync(id);
-		if (!result.IsSuccess)
-			return NotFound(result.Errors);
-
+		var result = await _fornecedorService.GetByIdAsync(id);
+		if (!result.IsSuccess) return NotFound(result.Errors);
 		return Ok(result.Value);
 	}
 
@@ -73,8 +75,8 @@ public class FornecedorController : ControllerBase
 	/// <param name="dto">Dados do fornecedor</param>
 	/// <returns>ID do fornecedor criada</returns>
 	[HttpPost]
-	[SwaggerOperation(Summary = "Cria um novo fornecedor", Description = "Cria uma novo fornecedor com os dados fornecidos")]
-	[SwaggerResponse(201, "Fornecedor criada com sucesso", typeof(Guid))]
+	[SwaggerOperation(Summary = "Cria um novo fornecedor", Description = "Cria um novo fornecedor com os dados fornecidos")]
+	[SwaggerResponse(201, "Fornecedor criado com sucesso", typeof(Guid))]
 	[SwaggerResponse(400, "Dados inválidos")]
 	[SwaggerResponse(401, "Não autorizado")]
 	[Authorize(Roles = "T_CAD_FOR")]
@@ -126,10 +128,44 @@ public class FornecedorController : ControllerBase
 	[Authorize(Roles = "T_DEL_FOR")]
 	public async Task<IActionResult> Delete(Guid id)
 	{
-		var result = await _fornecedorService.DeleteSoftFornecedorAsync(id);
+		var result = await _fornecedorService.DeleteFornecedorAsync(id);
 		if (!result.IsSuccess)
 			return NotFound(result.Errors);
 
 		return NoContent();
 	}
+
+	// Endpoints para gerenciar contratos de um fornecedor
+
+	[HttpPost("{fornecedorId}/contratos")]
+	[SwaggerOperation(Summary = "Adiciona um contrato a um fornecedor")]
+	[SwaggerResponse(204, "Contrato adicionado com sucesso")]
+	[SwaggerResponse(400, "IDs inválidos ou associação já existe")]
+	[SwaggerResponse(404, "Fornecedor ou Contrato não encontrado")]
+	[Authorize(Roles = "T_CAD_FOR")]
+	public async Task<IActionResult> AddContrato(Guid fornecedorId, [FromBody] AssociarContratoFornecedorDto dto)
+	{
+		var result = await _fornecedorService.AddContratoAsync(fornecedorId, dto.ContratoId);
+		if (!result.IsSuccess)
+		{
+			if (result.Errors.Any(e => e.Contains("não encontrado")))
+				return NotFound(result.Errors);
+			return BadRequest(result.Errors);
+		}
+		return NoContent();
+	}
+
+	[HttpDelete("{fornecedorId}/contratos/{contratoId}")]
+	[SwaggerOperation(Summary = "Remove um contrato de um fornecedor")]
+	[SwaggerResponse(204, "contrato removido com sucesso")]
+	[SwaggerResponse(404, "Fornecedor ou Contrato não encontrado, ou associação não existe")]
+	[Authorize(Roles = "T_DEL_FOR")]
+	public async Task<IActionResult> RemoveContrato(Guid fornecedorId, Guid contratoId)
+	{
+		// O serviço já lida com 'não encontrado', podemos retornar NoContent diretamente ou verificar o resultado
+		await _fornecedorService.RemoveContratoAsync(fornecedorId, contratoId);
+		return NoContent();
+	}
+
+
 }

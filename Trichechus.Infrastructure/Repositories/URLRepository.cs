@@ -18,11 +18,25 @@ public class URLRepository : IURLRepository
 	{
 		return await _context.URL.FindAsync(id);
 	}
-	public async Task<IEnumerable<URL>> GetAllAsync()
+	public async Task<IEnumerable<URL>> GetAllAsync()  
 	{
 		return await _context.URL.ToListAsync();
 	}
+	public async Task<URL> GetByIdWithSoftwareAsync(Guid id)
+	{
+		return await _context.URL
+		   .Include(p => p.Software)
+		   .FirstOrDefaultAsync(p => p.Id == id);
+	}
+	public async Task<IEnumerable<URL>> GetAllUrlAsync()
+	{
+		return await _context.URL
+			.Include(a => a.Software)
+			// .Where(a => a.DeletadoEm == null)
+			.ToListAsync();
 
+	}
+	
 	public async Task AddAsync(URL tarefa)
 	{
 		await _context.URL.AddAsync(tarefa);
@@ -44,4 +58,32 @@ public class URLRepository : IURLRepository
 			await _context.SaveChangesAsync();
 		}
 	}
+	
+	public async Task AddSoftUrlAsync(Guid urlId, Guid softwareId)
+	{
+		var url = await _context.Catalogo.Include(p => p.Software).FirstOrDefaultAsync(p => p.Id == softwareId);
+		var software = await _context.Software.FindAsync(softwareId);
+
+		if (url != null && software != null && !url.Software.Any(f => f.Id == softwareId))
+		{
+			url.Software.Add(software);
+			await _context.SaveChangesAsync();
+		}
+	}
+
+	public async Task DeleteSoftUrlAsync(Guid urlId, Guid softwareId)
+	{
+		var url = await _context.Catalogo.Include(p => p.Software).FirstOrDefaultAsync(p => p.Id == urlId);
+		var software = url?.Software.FirstOrDefault(f => f.Id == softwareId);
+
+		if (url != null && software != null)
+		{
+			url.Software.Remove(software);
+			await _context.SaveChangesAsync();
+		}
+	}
+    
+
+    
 }
+

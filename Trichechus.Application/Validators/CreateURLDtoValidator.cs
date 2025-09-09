@@ -3,9 +3,9 @@ using Trichechus.Application.DTOs;
 
 namespace Trichechus.Application.Validators
 {
-	public class CreateURLDtoValidator : AbstractValidator<CreateURLDto>
+	public class CreateUrlDtoValidator : AbstractValidator<CreateUrlDto>
 	{
-		public CreateURLDtoValidator()
+		public CreateUrlDtoValidator()
 		{
 			RuleFor(dto => dto.Endereco)
 				.NotEmpty().WithMessage("O Nome do fornecedor é obrigatório.")

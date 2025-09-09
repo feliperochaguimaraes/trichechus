@@ -9,60 +9,95 @@ namespace Trichechus.Application.Services;
 
 public class ContratoService : IContratoService
 {
-	private readonly IContratoRepository _repository;
+	private readonly IContratoRepository _ContratoRepository;
+	private readonly IFornecedorRepository _FornecedorRepository;
 	private readonly IValidator<CreateContratoDto> _createValidator;
 	private readonly IValidator<UpdateContratoDto> _updateValidator;
 	private readonly IUserContext _userContext;
 
 	public ContratoService(
-		IContratoRepository repository,
+		IContratoRepository contratoRepository,
+		IFornecedorRepository fornecedorRepository,
 		IValidator<CreateContratoDto> createValidator,
 		IValidator<UpdateContratoDto> updateValidator,
 		IUserContext userContext
 		)
 	{
-		_repository = repository;
+		_ContratoRepository = contratoRepository;
+		_FornecedorRepository = fornecedorRepository;
 		_createValidator = createValidator;
 		_updateValidator = updateValidator;
 		_userContext = userContext;
 	}
-	public async Task<IEnumerable<ContratoDto>> GetAllContratoAsync()
+	public async Task<Result<ContratoDto>> GetByIdAsync(Guid id)
 	{
-		var fornecedor = await _repository.GetAllAsync();
-		return fornecedor.Select(a => MapToDTO(a));
+		var contrato = await _ContratoRepository.GetByIdWithFornecedorAsync(id);
+		if (contrato == null)
+		{
+			return Result<ContratoDto>.Failure(new[] { "Fornecedor não encontrado." });
+		}
+
+		var dto = MapToDTO(contrato);
+		return Result<ContratoDto>.Success(dto);
+	}
+
+	public async Task<Result<IEnumerable<ContratoDto>>> GetAllContratoAsync()
+	{
+		var contratos = await _ContratoRepository.GetAllContratoAsync();
+
+		var dtos = contratos.Select(a => MapToDTO(a));
+
+		return Result<IEnumerable<ContratoDto>>.Success(dtos);
 	}
 
 	public async Task<Result<ContratoDto>> GetContratoByIdAsync(Guid id)
 	{
-		var fornecedor = await _repository.GetByIdAsync(id);
-		if (fornecedor == null)
+		var contrato = await _ContratoRepository.GetByIdWithFornecedorAsync(id);
+		if (contrato == null)
 		{
-			return Result<ContratoDto>.Failure(new List<string> { "Contrato não encontrada." });
+			return Result<ContratoDto>.Failure(new List<string> { "Contrato não encontrado." });
 		}
 
-		return Result<ContratoDto>.Success(MapToDTO(fornecedor));
+		return Result<ContratoDto>.Success(MapToDTO(contrato));
 	}
 	public async Task<Result<Guid>> CreateContratoAsync(CreateContratoDto dto)
 	{
-		// A validação já será feita automaticamente pelo FluentValidation
-		// Este código é apenas para demonstração de como você poderia fazer validação manual
+		// // // A validação já será feita automaticamente pelo FluentValidation
+		// // // Este código é apenas para demonstração de como você poderia fazer validação manual
 		var validationResult = await _createValidator.ValidateAsync(dto);
 		if (!validationResult.IsValid)
 		{
 			return Result<Guid>.Failure(validationResult.Errors.Select(e => e.ErrorMessage).ToList());
 		}
 
-		var fornecedor = new Contrato
+		var contrato = new Contrato
 		{
 			NomeAlias = dto.NomeAlias,
+			Numero = dto.Numero,
 			Objeto = dto.Objeto,
 			Ativo = dto.Ativo,
 			Inicio = dto.Inicio,
-			Fim = dto.Fim
-		};
+			Fim = dto.Fim,
+			AreaGestora = dto.AreaGestora,
+			Gerencia = dto.Gerencia
 
-		await _repository.AddAsync(fornecedor);
-		return Result<Guid>.Success(fornecedor.Id);
+		};
+		contrato.Fornecedor ??= new List<Fornecedor>();
+
+		if (dto.FornecedorIds != null)
+		{
+			foreach (var fornId in dto.FornecedorIds)
+			{
+				var fornecedor = await _FornecedorRepository.GetByIdAsync(fornId);
+				if (fornecedor != null)
+				{
+					contrato.Fornecedor.Add(fornecedor);
+				}
+			}
+		}
+
+		await _ContratoRepository.AddAsync(contrato);
+		return Result<Guid>.Success(contrato.Id);
 	}
 
 	public async Task<Result> UpdateContratoAsync(UpdateContratoDto dto)
@@ -75,61 +110,91 @@ public class ContratoService : IContratoService
 			return Result.Failure(validationResult.Errors.Select(e => e.ErrorMessage).ToList());
 		}
 
-		var fornecedor = await _repository.GetByIdAsync(dto.Id);
-		if (fornecedor == null)
+		var contrato = await _ContratoRepository.GetByIdAsync(dto.Id);
+		if (contrato == null)
 		{
 			return Result.Failure(new List<string> { "Contrato não encontrada." });
 		}
 
-		fornecedor.NomeAlias = dto.NomeAlias;
-		fornecedor.Objeto = dto.Objeto;
-		fornecedor.Ativo = dto.Ativo;
-		fornecedor.Inicio = dto.Inicio;
-		fornecedor.Fim = dto.Fim;
+		contrato.NomeAlias = dto.NomeAlias;
+		contrato.Numero = dto.Numero;
+		contrato.Objeto = dto.Objeto;
+		contrato.Ativo = dto.Ativo;
+		contrato.Inicio = dto.Inicio;
+		contrato.Fim = dto.Fim;
+		contrato.AreaGestora = dto.AreaGestora;
+		contrato.Gerencia = dto.Gerencia;
 
-		await _repository.UpdateAsync(fornecedor);
-		return Result.Success();
+		// Atualizar contratos (exemplo simples: substitui todas)
+		if (dto.FornecedorIds != null)
+		{
+			contrato.Fornecedor.Clear();
+			foreach (var fornId in dto.FornecedorIds)
+			{
+				var fornecedor = await _FornecedorRepository.GetByIdAsync(fornId);
+				if (fornecedor != null)
+				{
+					contrato.Fornecedor.Add(fornecedor);
+				}
+			}
+		}
+
+		await _ContratoRepository.UpdateAsync(contrato);
+		var resultDto = MapToDTO(contrato);
+		return Result<ContratoDto>.Success(resultDto);
+		
 	}
 
 	public async Task<Result> DeleteContratoAsync(Guid id)
 	{
-		var fornecedor = await _repository.GetByIdAsync(id);
-		if (fornecedor == null)
+		var contrato = await _ContratoRepository.GetByIdAsync(id);
+		if (contrato == null)
 		{
 			return Result.Failure(new List<string> { "Contrato não encontrada." });
 		}
 
-		// Soft delete
-		// fornecedor.DeletadoEm = DateTime.Now;
-		// await _repository.UpdateAsync(fornecedor);
 
-		// Ou hard delete
-		await _repository.DeleteAsync(id);
+		await _ContratoRepository.DeleteAsync(id);
 		return Result.Success();
 	}
 
-	public async Task<Result> DeleteSoftContratoAsync(Guid id)
+	public async Task<Result> AddFornecedorAsync(Guid contratoId, Guid fornecedorId)
 	{
-		var fornecedor = await _repository.GetByIdAsync(id);
-		if (fornecedor == null)
-		{
-			return Result.Failure(new List<string> { "Contrato não encontrada." });
-		}
+		var contrato = await _ContratoRepository.GetByIdAsync(contratoId);
+		var fornecedor = await _FornecedorRepository.GetByIdAsync(fornecedorId);
 
-		await _repository.UpdateAsync(fornecedor);
+		if (contrato == null) return Result.Failure(new[] { "Contrato não encontrado." });
+		if (fornecedor == null) return Result.Failure(new[] { "Fornecedor não encontrado." });
+
+		await _ContratoRepository.AddFornecedorAsync(fornecedorId, contratoId);
 		return Result.Success();
 	}
 
-	private ContratoDto MapToDTO(Contrato fornecedor)
+	public async Task<Result> RemoveFornecedorAsync(Guid contratoId, Guid fornecedorId)
+	{
+		// Validações podem ser feitas aqui ou no repositório
+		await _ContratoRepository.RemoveFornecedorAsync(contratoId, fornecedorId);
+		return Result.Success();
+	}
+
+	private ContratoDto MapToDTO(Contrato contrato)
 	{
 		return new ContratoDto
 		{
-			Id = fornecedor.Id,
-			NomeAlias = fornecedor.NomeAlias,
-			Objeto = fornecedor.Objeto,
-			Inicio = fornecedor.Inicio,
-			Fim = fornecedor.Fim,
-			Ativo = fornecedor.Ativo
+			Id = contrato.Id,
+			NomeAlias = contrato.NomeAlias,
+			Numero = contrato.Numero,
+			Objeto = contrato.Objeto,
+			Ativo = contrato.Ativo,
+			Inicio = contrato.Inicio,
+			Fim = contrato.Fim,
+			AreaGestora = contrato.AreaGestora,
+			Gerencia = contrato.Gerencia,
+			Fornecedores = contrato.Fornecedor? // Mapeia contratos para serem carregados
+				.Select(f => new FornecedorDto { Id = f.Id, Nome = f.Nome, CPFCNPJ = f.CPFCNPJ })
+				.ToList()
+
 		};
 	}
+
 }

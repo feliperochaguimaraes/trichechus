@@ -18,11 +18,25 @@ public class CatalogoRepository : ICatalogoRepository
 	{
 		return await _context.Catalogo.FindAsync(id);
 	}
+	public async Task<Catalogo> GetByIdWithSoftwareAsync(Guid id)
+	{
+		return await _context.Catalogo
+		   .Include(p => p.Software)
+		   .FirstOrDefaultAsync(p => p.Id == id);
+	}
+
 	public async Task<IEnumerable<Catalogo>> GetAllAsync()
 	{
 		return await _context.Catalogo.ToListAsync();
 	}
+	public async Task<IEnumerable<Catalogo>> GetAllCatalogoAsync()
+	{
+		return await _context.Catalogo
+			.Include(a => a.Software)
+			// .Where(a => a.DeletadoEm == null)
+			.ToListAsync();
 
+	}
 	public async Task AddAsync(Catalogo tarefa)
 	{
 		await _context.Catalogo.AddAsync(tarefa);
@@ -41,6 +55,29 @@ public class CatalogoRepository : ICatalogoRepository
 		if (tarefa != null)
 		{
 			_context.Catalogo.Remove(tarefa);
+			await _context.SaveChangesAsync();
+		}
+	}
+	public async Task AddSoftCatalogoAsync(Guid catalogoId, Guid softwareId)
+	{
+		var catalogo = await _context.Catalogo.Include(p => p.Software).FirstOrDefaultAsync(p => p.Id == softwareId);
+		var software = await _context.Software.FindAsync(softwareId);
+
+		if (catalogo != null && software != null && !catalogo.Software.Any(f => f.Id == softwareId))
+		{
+			catalogo.Software.Add(software);
+			await _context.SaveChangesAsync();
+		}
+	}
+
+	public async Task DeleteSoftCatalogoAsync(Guid catalogoId, Guid softwareId)
+	{
+		var catalogo = await _context.Catalogo.Include(p => p.Software).FirstOrDefaultAsync(p => p.Id == catalogoId);
+		var software = catalogo?.Software.FirstOrDefault(f => f.Id == softwareId);
+
+		if (catalogo != null && software != null)
+		{
+			catalogo.Software.Remove(software);
 			await _context.SaveChangesAsync();
 		}
 	}

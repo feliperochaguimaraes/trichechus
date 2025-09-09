@@ -18,9 +18,29 @@ public class BaseDadosRepository : IBaseDadosRepository
 	{
 		return await _context.BaseDados.FindAsync(id);
 	}
+	public async Task<BaseDados> GetByIdWithSoftwareAsync(Guid id)
+	{
+		return await _context.BaseDados
+		   .Include(p => p.Software)
+		   .FirstOrDefaultAsync(p => p.Id == id);
+	}
+	public async Task<BaseDados> GetByNameAsync(string Nome)
+	{
+		return await _context.BaseDados
+			.Include(p => p.Software)
+			.FirstOrDefaultAsync(p => p.Cluster.ToLower() == Nome.ToLower());
+	}
 	public async Task<IEnumerable<BaseDados>> GetAllAsync()
 	{
 		return await _context.BaseDados.ToListAsync();
+	}
+	public async Task<IEnumerable<BaseDados>> GetAllBaseDadosAsync()
+	{
+		return await _context.BaseDados
+			.Include(a => a.Software)
+			// .Where(a => a.DeletadoEm == null)
+			.ToListAsync();
+
 	}
 
 	public async Task AddAsync(BaseDados tarefa)
@@ -44,4 +64,28 @@ public class BaseDadosRepository : IBaseDadosRepository
 			await _context.SaveChangesAsync();
 		}
 	}
+	
+	public async Task AddSoftAsync(Guid baseDadosId, Guid softwareId)
+	{
+		var baseDados = await _context.BaseDados.Include(p => p.Software).FirstOrDefaultAsync(p => p.Id == softwareId);
+		var software = await _context.Software.FindAsync(softwareId);
+
+		if (baseDados != null && software != null && !baseDados.Software.Any(f => f.Id == softwareId))
+		{
+			baseDados.Software.Add(software);
+			await _context.SaveChangesAsync();
+		}
+	}
+
+    public async Task RemoveSoftBaseDadosAsync(Guid baseDadosId, Guid softwareId)
+    {
+        var baseDados = await _context.Contrato.Include(p => p.Software).FirstOrDefaultAsync(p => p.Id == baseDadosId);
+        var software = baseDados?.Software.FirstOrDefault(f => f.Id == softwareId);
+
+        if (baseDados != null && software != null)
+        {
+            baseDados.Software.Remove(software);
+            await _context.SaveChangesAsync();
+        }
+    }
 }

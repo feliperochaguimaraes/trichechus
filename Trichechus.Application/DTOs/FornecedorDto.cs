@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Trichechus.Application.DTOs;
 
 public class FornecedorDto
@@ -10,7 +12,8 @@ public class FornecedorDto
 	public string Cep { get; set; } = "";
 	public string Cidade { get; set; } = "";
 	public string Estado { get; set; } = "";
-	public bool Ativo { get; set; } = true;
+	public string Ativo { get; set; } = "";
+	public List<ContratoDto>? Contratos { get; set; }
 }
 
 public class CreateFornecedorDto
@@ -22,7 +25,8 @@ public class CreateFornecedorDto
 	public string Cep { get; set; } = "";
 	public string Cidade { get; set; } = "";
 	public string Estado { get; set; } = "";
-	public bool Ativo { get; set; } = true;
+	public string Ativo { get; set; } = "";
+	public List<Guid>? ContratoIds { get; set; }
 }
 
 public class UpdateFornecedorDto
@@ -35,5 +39,14 @@ public class UpdateFornecedorDto
 	public string Cep { get; set; } = "";
 	public string Cidade { get; set; } = "";
 	public string Estado { get; set; } = "";
-	public bool Ativo { get; set; } = true;
+	public string Ativo { get; set; } = "";
+	public List<Guid>? ContratoIds { get; set; }
+}
+
+
+// DTO para associar/desassociar fornecedor de contrato
+public class AssociarContratoFornecedorDto
+{
+	[Required]
+	public Guid ContratoId { get; set; }
 }

@@ -18,15 +18,28 @@ public class FornecedorRepository : IFornecedorRepository
 	{
 		return await _context.Fornecedor.FindAsync(id);
 	}
+	public async Task<Fornecedor> GetByIdWithContratosAsync(Guid id)
+    {
+        return await _context.Fornecedor
+           .Include(p => p.Contrato)
+           .FirstOrDefaultAsync(p => p.Id == id);
+    }
+	public async Task<Fornecedor> GetByNameAsync(string NomeAlias)
+    {
+        return await _context.Fornecedor
+            .Include(p => p.Contrato)
+            .FirstOrDefaultAsync(p => p.Nome.ToLower() == NomeAlias.ToLower());
+    } 
 
 	public async Task<IEnumerable<Fornecedor>> GetAllAsync()
 	{
 		return await _context.Fornecedor
-			// .Include(a => a.Tarefas)
+			.Include(a => a.Contrato)
 			// .Where(a => a.DeletadoEm == null)
 			.ToListAsync();
 
 	}
+
 
 	public async Task AddAsync(Fornecedor fornecedor)
 	{
@@ -59,4 +72,31 @@ public class FornecedorRepository : IFornecedorRepository
 			await _context.SaveChangesAsync();
 		}
 	}
+
+	public async Task AddContratoAsync(Guid fornecedorId, Guid contratoId)
+	{
+		var fornecedor = await _context.Fornecedor.Include(p => p.Contrato).FirstOrDefaultAsync(p => p.Id == fornecedorId);
+		var contrato = await _context.Contrato.FindAsync(contratoId);
+
+		if (fornecedor != null && contrato != null && !fornecedor.Contrato.Any(f => f.Id == contratoId))
+		{
+			fornecedor.Contrato.Add(contrato);
+			await _context.SaveChangesAsync();
+		}
+	}
+
+	public async Task RemoveContratoAsync(Guid fornecedorId, Guid contratoId)
+	{
+		var fornecedor = await _context.Fornecedor.Include(p => p.Contrato).FirstOrDefaultAsync(p => p.Id == fornecedorId);
+		var contrato = fornecedor?.Contrato.FirstOrDefault(f => f.Id == contratoId);
+
+		if (fornecedor != null && contrato != null)
+		{
+			fornecedor.Contrato.Remove(contrato);
+			await _context.SaveChangesAsync();
+		}
+	}
+	
 }
+
+
