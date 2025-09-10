@@ -83,7 +83,7 @@ public class LocalAutenticacaoService : ILocalAutenticacaoService
 			SenhaHash = BC.HashPassword(dto.Senha),
 			Ativo = true, // Ou false, se precisar de confirmação de email
 			CriadoEm = DateTime.UtcNow,
-			Equipe = dto.Equipe,
+			// Equipe = dto.Equipe,
 			Matricula = dto.Matricula,
 			Perfil = perfisParaAdicionar
 		};

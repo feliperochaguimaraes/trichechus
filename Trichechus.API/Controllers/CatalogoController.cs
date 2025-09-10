@@ -159,37 +159,4 @@ public class CatalogoController : ControllerBase
 		return NoContent();
 	}
 
-
-// Endpoints para gerenciar software de uma catalogo
-
-    [HttpPost("{catalogoId}/software")]
-	[SwaggerOperation(Summary = "Adiciona um software a um catalogo")]
-	[SwaggerResponse(204, "Software adicionado com sucesso")]
-	[SwaggerResponse(400, "IDs inválidos ou associação já existe")]
-	[SwaggerResponse(404, "Catalogo ou software não encontrado")]
-	[Authorize(Roles = "T_CAD_SOF")]
-	public async Task<IActionResult> AddSoftware(Guid catalogoId, [FromBody] AssociarSoftwareCatalogoDto dto)
-	{
-		var result = await _catalogoService.AddSoftCatalogoAsync(catalogoId, dto.SoftwareId);
-		if (!result.IsSuccess)
-		{
-			if (result.Errors.Any(e => e.Contains("não encontrado")))
-				return NotFound(result.Errors);
-			return BadRequest(result.Errors);
-		}
-		return NoContent();
-	}
-
-
-	[HttpDelete("{catalogoId}/software/{SoftwareId}")]
-	[SwaggerOperation(Summary = "Remove um catalogo de um software")]
-	[SwaggerResponse(204, "Catalogo removido com sucesso")]
-	[SwaggerResponse(404, "Catalogo ou software não encontrado, ou associação não existe")]
-	[Authorize(Roles = "T_DEL_BAS")]
-	public async Task<IActionResult> RemoveSoftware(Guid catalogoId, Guid softwareId)
-	{
-		// O serviço já lida com 'não encontrado', podemos retornar NoContent diretamente ou verificar o resultado
-		await _catalogoService.DeleteSoftCatalogoAsync(catalogoId, softwareId);
-		return NoContent();
-	}
 }

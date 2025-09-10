@@ -38,5 +38,7 @@ public class Catalogo
 	[Column("Observacao", TypeName = "Text")]
 	public string? Observacao { get; set; } = null;
 
-	public ICollection<Software> Software { get; set; } = new List<Software>();
+	// Relação obrigatória com Atividade
+	public Guid SoftwareId { get; set; }
+	public Software Software { get; set; } = default!;
 }

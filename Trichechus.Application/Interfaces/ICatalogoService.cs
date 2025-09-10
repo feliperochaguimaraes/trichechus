@@ -11,7 +11,5 @@ namespace Trichechus.Application.Interfaces
 		Task<Result<Guid>> CreateCatalogoAsync(CreateCatalogoDto dto);
 		Task<Result> UpdateCatalogoAsync(UpdateCatalogoDto dto);
 		Task<Result> DeleteCatalogoAsync(Guid id);
-		Task<Result> AddSoftCatalogoAsync(Guid catalogoId, Guid softwareId);
-		Task<Result> DeleteSoftCatalogoAsync(Guid catalogoId, Guid softwareId);
 	}
 }

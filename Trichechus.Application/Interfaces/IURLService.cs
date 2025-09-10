@@ -11,7 +11,5 @@ namespace Trichechus.Application.Interfaces
 		Task<Result<Guid>> CreateUrlAsync(CreateUrlDto dto);
 		Task<Result> UpdateUrlAsync(UpdateUrlDto dto);
 		Task<Result> DeleteUrlAsync(Guid id);
-		Task<Result> AddSoftUrlAsync(Guid urlId, Guid softwareId);
-		Task<Result> DeleteSoftUrlAsync(Guid urlId, Guid softwareId);
 	}
 }

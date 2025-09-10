@@ -22,8 +22,9 @@ public class Contrato
 	[Column("AreaGestora", TypeName = "varchar(10)")]
 	public string AreaGestora { get; set; } = "";
 
-	[Column("Gerencia", TypeName = "varchar(10)")]
-	public string Gerencia { get; set; } = "";
+	// Relação obrigatória com Atividade
+	public Guid GerenciaId { get; set; }
+	public Gerencia Gerencia { get; set; } = default!;
 
 	public ICollection<Fornecedor> Fornecedor { get; set; } = new List<Fornecedor>();
 	public ICollection<Software> Software { get; set; } = new List<Software>();

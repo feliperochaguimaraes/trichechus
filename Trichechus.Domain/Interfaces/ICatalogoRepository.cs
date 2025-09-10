@@ -13,8 +13,6 @@ public interface ICatalogoRepository
 	Task AddAsync(Catalogo catalogo);
 	Task UpdateAsync(Catalogo catalogo);
 	Task DeleteAsync(Guid id);
-	Task AddSoftCatalogoAsync(Guid catalogoId, Guid softwareId);
-	Task DeleteSoftCatalogoAsync(Guid catalogoId, Guid softwareId);
 }
 
     

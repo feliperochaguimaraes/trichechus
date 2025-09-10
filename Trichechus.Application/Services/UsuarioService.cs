@@ -46,7 +46,6 @@ public class UsuarioService : IUsuarioService
 		{
 			Nome = dto.Nome,
 			Email = dto.Email,
-			Equipe = dto.Equipe,
 			Matricula = dto.Matricula,
 			// SenhaHash = dto.SenhaHash,
 			SenhaHash = BC.HashPassword(dto.SenhaHash),
@@ -88,7 +87,7 @@ public class UsuarioService : IUsuarioService
 
 		usuario.Nome = dto.Nome;
 		usuario.Email = dto.Email;
-		usuario.Equipe = dto.Equipe;
+		// usuario.Equipe = dto.Equipe;
 		usuario.Matricula = dto.Matricula;
 		usuario.SenhaHash = BC.HashPassword(dto.SenhaHash);
 		usuario.Ativo = dto.Ativo;
@@ -141,7 +140,7 @@ public class UsuarioService : IUsuarioService
 			Id = usuario.Id,
 			Nome = usuario.Nome,
 			Email = usuario.Email,
-			Equipe = usuario.Equipe,
+			// Equipe = usuario.Equipe,
 			Matricula = usuario.Matricula,
 			SenhaHash = BC.HashPassword(usuario.SenhaHash),
 			Ativo = usuario.Ativo,

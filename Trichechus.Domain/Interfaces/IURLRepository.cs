@@ -13,7 +13,5 @@ public interface IURLRepository
 	Task AddAsync(URL url);
 	Task UpdateAsync(URL url);
 	Task DeleteAsync(Guid id);
-	Task AddSoftUrlAsync(Guid urlId, Guid softwareId);
-	Task DeleteSoftUrlAsync(Guid urlId, Guid softwareId);
 }
 

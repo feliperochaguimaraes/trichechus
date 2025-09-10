@@ -47,13 +47,33 @@ namespace Trichechus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Catalogo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    HelixId = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true),
+                    HelixEquipe = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    HelixService = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    HelixCategoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    HelixSubcategoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    CatalogoEquipe = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Ativo = table.Column<string>(type: "varchar(3)", maxLength: 3, nullable: false),
+                    Observacao = table.Column<string>(type: "Text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Catalogo", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Contrato",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     NomeAlias = table.Column<string>(type: "varchar(20)", nullable: false),
+                    Numero = table.Column<string>(type: "varchar(12)", nullable: false),
                     Objeto = table.Column<string>(type: "Text", nullable: false),
-                    Ativo = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Ativo = table.Column<string>(type: "TEXT", nullable: false),
                     Inicio = table.Column<DateTime>(type: "DateTime2", nullable: false),
                     Fim = table.Column<DateTime>(type: "DateTime2", nullable: false),
                     AreaGestora = table.Column<string>(type: "varchar(10)", nullable: false),
@@ -70,13 +90,14 @@ namespace Trichechus.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Nome = table.Column<string>(type: "varchar(50)", nullable: false),
+                    Descricao = table.Column<string>(type: "varchar(250)", nullable: true),
                     CPFCNPJ = table.Column<string>(type: "varchar(20)", nullable: false),
                     Endereco = table.Column<string>(type: "varchar(100)", nullable: false),
                     Numero = table.Column<string>(type: "varchar(20)", nullable: false),
                     Cep = table.Column<string>(type: "varchar(10)", nullable: false),
                     Cidade = table.Column<string>(type: "varchar(30)", nullable: false),
                     Estado = table.Column<string>(type: "varchar(20)", nullable: false),
-                    Ativo = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Ativo = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -107,6 +128,21 @@ namespace Trichechus.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Perfil", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "URL",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Endereco = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Ambiente = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false),
+                    Servidor = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
+                    IP = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_URL", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -279,28 +315,27 @@ namespace Trichechus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Catalogo",
+                name: "CatalogoSoftware",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    HelixId = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true),
-                    HelixEquipe = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
-                    HelixService = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
-                    HelixCategoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
-                    HelixSubcategoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
-                    CatalogoEquipe = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    Ativo = table.Column<string>(type: "varchar(3)", maxLength: 3, nullable: false),
-                    Observacao = table.Column<string>(type: "Text", nullable: true),
-                    SoftwareId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    CatalogoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SoftwareId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Catalogo", x => x.Id);
+                    table.PrimaryKey("PK_CatalogoSoftware", x => new { x.CatalogoId, x.SoftwareId });
                     table.ForeignKey(
-                        name: "FK_Catalogo_Software_SoftwareId",
+                        name: "FK_CatalogoSoftware_Catalogo_CatalogoId",
+                        column: x => x.CatalogoId,
+                        principalTable: "Catalogo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CatalogoSoftware_Software_SoftwareId",
                         column: x => x.SoftwareId,
                         principalTable: "Software",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -323,24 +358,27 @@ namespace Trichechus.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "URL",
+                name: "SoftwareURL",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Endereco = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    Ambiente = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false),
-                    Servidor = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
-                    IP = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false),
-                    SoftwareId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    SoftwareId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    URLId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_URL", x => x.Id);
+                    table.PrimaryKey("PK_SoftwareURL", x => new { x.SoftwareId, x.URLId });
                     table.ForeignKey(
-                        name: "FK_URL_Software_SoftwareId",
+                        name: "FK_SoftwareURL_Software_SoftwareId",
                         column: x => x.SoftwareId,
                         principalTable: "Software",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SoftwareURL_URL_URLId",
+                        column: x => x.URLId,
+                        principalTable: "URL",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -349,8 +387,8 @@ namespace Trichechus.Infrastructure.Migrations
                 column: "SoftwareId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Catalogo_SoftwareId",
-                table: "Catalogo",
+                name: "IX_CatalogoSoftware_SoftwareId",
+                table: "CatalogoSoftware",
                 column: "SoftwareId");
 
             migrationBuilder.CreateIndex(
@@ -386,14 +424,14 @@ namespace Trichechus.Infrastructure.Migrations
                 column: "ContratoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SoftwareURL_URLId",
+                table: "SoftwareURL",
+                column: "URLId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tarefa_AtividadeId",
                 table: "Tarefa",
                 column: "AtividadeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_URL_SoftwareId",
-                table: "URL",
-                column: "SoftwareId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuario_Email",
@@ -414,7 +452,7 @@ namespace Trichechus.Infrastructure.Migrations
                 name: "BaseDadosSoftware");
 
             migrationBuilder.DropTable(
-                name: "Catalogo");
+                name: "CatalogoSoftware");
 
             migrationBuilder.DropTable(
                 name: "ContratoFornecedor");
@@ -426,10 +464,10 @@ namespace Trichechus.Infrastructure.Migrations
                 name: "Repositorio");
 
             migrationBuilder.DropTable(
-                name: "Tarefa");
+                name: "SoftwareURL");
 
             migrationBuilder.DropTable(
-                name: "URL");
+                name: "Tarefa");
 
             migrationBuilder.DropTable(
                 name: "UsuarioPerfil");
@@ -438,16 +476,22 @@ namespace Trichechus.Infrastructure.Migrations
                 name: "BaseDados");
 
             migrationBuilder.DropTable(
+                name: "Catalogo");
+
+            migrationBuilder.DropTable(
                 name: "Fornecedor");
 
             migrationBuilder.DropTable(
                 name: "Funcionalidade");
 
             migrationBuilder.DropTable(
-                name: "Atividade");
+                name: "Software");
 
             migrationBuilder.DropTable(
-                name: "Software");
+                name: "URL");
+
+            migrationBuilder.DropTable(
+                name: "Atividade");
 
             migrationBuilder.DropTable(
                 name: "Perfil");

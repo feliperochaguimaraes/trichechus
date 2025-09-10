@@ -58,27 +58,5 @@ public class CatalogoRepository : ICatalogoRepository
 			await _context.SaveChangesAsync();
 		}
 	}
-	public async Task AddSoftCatalogoAsync(Guid catalogoId, Guid softwareId)
-	{
-		var catalogo = await _context.Catalogo.Include(p => p.Software).FirstOrDefaultAsync(p => p.Id == softwareId);
-		var software = await _context.Software.FindAsync(softwareId);
-
-		if (catalogo != null && software != null && !catalogo.Software.Any(f => f.Id == softwareId))
-		{
-			catalogo.Software.Add(software);
-			await _context.SaveChangesAsync();
-		}
-	}
-
-	public async Task DeleteSoftCatalogoAsync(Guid catalogoId, Guid softwareId)
-	{
-		var catalogo = await _context.Catalogo.Include(p => p.Software).FirstOrDefaultAsync(p => p.Id == catalogoId);
-		var software = catalogo?.Software.FirstOrDefault(f => f.Id == softwareId);
-
-		if (catalogo != null && software != null)
-		{
-			catalogo.Software.Remove(software);
-			await _context.SaveChangesAsync();
-		}
-	}
+	
 }

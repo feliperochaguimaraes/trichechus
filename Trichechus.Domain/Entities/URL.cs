@@ -25,5 +25,7 @@ public class URL
 	[Column("IP", TypeName = "varchar(20)")]
 	public required string IP { get; set; }
 
-	public ICollection<Software> Software { get; set; } = new List<Software>();
+	// Relação obrigatória com Atividade
+	public Guid SoftwareId { get; set; }
+	public Software Software { get; set; } = default!;
 }

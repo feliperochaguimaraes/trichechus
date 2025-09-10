@@ -137,37 +137,4 @@ public class UrlController : ControllerBase
         return NoContent();
     }
 
-
-	// Endpoints para gerenciar software de uma url
-
-	[HttpPost("{urlId}/software")]
-	[SwaggerOperation(Summary = "Adiciona um software a uma url")]
-	[SwaggerResponse(204, "Software adicionado com sucesso")]
-	[SwaggerResponse(400, "IDs inválidos ou associação já existe")]
-	[SwaggerResponse(404, "Url ou software não encontrado")]
-	[Authorize(Roles = "T_CAD_URL")]
-	public async Task<IActionResult> AddSoftware(Guid urlId, [FromBody] AssociarSoftwareUrlDto dto)
-	{
-		var result = await _urlService.AddSoftUrlAsync(urlId, dto.SoftwareId);
-		if (!result.IsSuccess)
-		{
-			if (result.Errors.Any(e => e.Contains("não encontrado")))
-				return NotFound(result.Errors);
-			return BadRequest(result.Errors);
-		}
-		return NoContent();
-	}
-
-
-	[HttpDelete("{urlId}/software/{SoftwareId}")]
-	[SwaggerOperation(Summary = "Remove uma url de um software")]
-	[SwaggerResponse(204, "Url removido com sucesso")]
-	[SwaggerResponse(404, "Url ou software não encontrado, ou associação não existe")]
-	[Authorize(Roles = "T_DEL_URL")]
-	public async Task<IActionResult> RemoveSoftware(Guid urlId, Guid softwareId)
-	{
-		// O serviço já lida com 'não encontrado', podemos retornar NoContent diretamente ou verificar o resultado
-		await _urlService.DeleteSoftUrlAsync(urlId, softwareId);
-		return NoContent();
-	}
 }

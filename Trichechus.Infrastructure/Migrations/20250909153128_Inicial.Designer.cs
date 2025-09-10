@@ -11,8 +11,8 @@ using Trichechus.Infrastructure.Context;
 namespace Trichechus.Infrastructure.Migrations
 {
     [DbContext(typeof(TrichechusDbContext))]
-    [Migration("20250814113825_addNumeroContrato")]
-    partial class addNumeroContrato
+    [Migration("20250909153128_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,21 @@ namespace Trichechus.Infrastructure.Migrations
                     b.HasIndex("SoftwareId");
 
                     b.ToTable("BaseDadosSoftware");
+                });
+
+            modelBuilder.Entity("CatalogoSoftware", b =>
+                {
+                    b.Property<Guid>("CatalogoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("SoftwareId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CatalogoId", "SoftwareId");
+
+                    b.HasIndex("SoftwareId");
+
+                    b.ToTable("CatalogoSoftware");
                 });
 
             modelBuilder.Entity("ContratoFornecedor", b =>
@@ -78,6 +93,21 @@ namespace Trichechus.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("UsuarioPerfil", (string)null);
+                });
+
+            modelBuilder.Entity("SoftwareURL", b =>
+                {
+                    b.Property<Guid>("SoftwareId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("URLId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("SoftwareId", "URLId");
+
+                    b.HasIndex("URLId");
+
+                    b.ToTable("SoftwareURL");
                 });
 
             modelBuilder.Entity("Trichechus.Domain.Entities.Atividade", b =>
@@ -204,12 +234,7 @@ namespace Trichechus.Infrastructure.Migrations
                         .HasColumnType("Text")
                         .HasColumnName("Observacao");
 
-                    b.Property<Guid?>("SoftwareId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("SoftwareId");
 
                     b.ToTable("Catalogo");
                 });
@@ -287,6 +312,10 @@ namespace Trichechus.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(30)")
                         .HasColumnName("Cidade");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("varchar(250)")
+                        .HasColumnName("Descricao");
 
                     b.Property<string>("Endereco")
                         .IsRequired()
@@ -534,12 +563,7 @@ namespace Trichechus.Infrastructure.Migrations
                         .HasColumnType("varchar(30)")
                         .HasColumnName("Servidor");
 
-                    b.Property<Guid?>("SoftwareId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("SoftwareId");
 
                     b.ToTable("URL");
                 });
@@ -606,6 +630,21 @@ namespace Trichechus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CatalogoSoftware", b =>
+                {
+                    b.HasOne("Trichechus.Domain.Entities.Catalogo", null)
+                        .WithMany()
+                        .HasForeignKey("CatalogoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Trichechus.Domain.Entities.Software", null)
+                        .WithMany()
+                        .HasForeignKey("SoftwareId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ContratoFornecedor", b =>
                 {
                     b.HasOne("Trichechus.Domain.Entities.Contrato", null)
@@ -651,11 +690,19 @@ namespace Trichechus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Trichechus.Domain.Entities.Catalogo", b =>
+            modelBuilder.Entity("SoftwareURL", b =>
                 {
                     b.HasOne("Trichechus.Domain.Entities.Software", null)
-                        .WithMany("Catalogo")
-                        .HasForeignKey("SoftwareId");
+                        .WithMany()
+                        .HasForeignKey("SoftwareId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Trichechus.Domain.Entities.URL", null)
+                        .WithMany()
+                        .HasForeignKey("URLId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Trichechus.Domain.Entities.Repositorio", b =>
@@ -683,13 +730,6 @@ namespace Trichechus.Infrastructure.Migrations
                     b.Navigation("Atividade");
                 });
 
-            modelBuilder.Entity("Trichechus.Domain.Entities.URL", b =>
-                {
-                    b.HasOne("Trichechus.Domain.Entities.Software", null)
-                        .WithMany("URL")
-                        .HasForeignKey("SoftwareId");
-                });
-
             modelBuilder.Entity("Trichechus.Domain.Entities.Atividade", b =>
                 {
                     b.Navigation("Tarefa");
@@ -702,11 +742,7 @@ namespace Trichechus.Infrastructure.Migrations
 
             modelBuilder.Entity("Trichechus.Domain.Entities.Software", b =>
                 {
-                    b.Navigation("Catalogo");
-
                     b.Navigation("Repositorio");
-
-                    b.Navigation("URL");
                 });
 #pragma warning restore 612, 618
         }

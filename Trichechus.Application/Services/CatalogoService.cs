@@ -84,19 +84,7 @@ public class CatalogoService : ICatalogoService
 			Observacao = dto.Observacao
 		};
 
-		catalogo.Software ??= new List<Software>();
-
-		if (dto.SoftwareIds != null)
-		{
-			foreach (var softId in dto.SoftwareIds)
-			{
-				var software = await _SoftwareRepository.GetByIdAsync(softId);
-				if (software != null)
-				{
-					catalogo.Software.Add(software);
-				}
-			}
-		}
+		
 		await _CatalogoRepository.AddAsync(catalogo);
 		return Result<Guid>.Success(catalogo.Id);
 
@@ -127,19 +115,7 @@ public class CatalogoService : ICatalogoService
 		catalogo.Ativo = dto.Ativo;
 		catalogo.Observacao = dto.Observacao;
 
-		// Atualizar Base de Dados (exemplo simples: substitui todas)
-		if (dto.SoftwareIds != null)
-		{
-			catalogo.Software.Clear();
-			foreach (var softId in dto.SoftwareIds)
-			{
-				var software = await _SoftwareRepository.GetByIdAsync(softId);
-				if (software != null)
-				{
-					catalogo.Software.Add(software);
-				}
-			}
-		}
+		
 		await _CatalogoRepository.UpdateAsync(catalogo);
 		var resultDto = MapToDTO(catalogo);
 		return Result<CatalogoDto>.Success(resultDto);
@@ -167,36 +143,6 @@ public class CatalogoService : ICatalogoService
 		return Result.Success();
 	}
 	
-	public async Task<Result> AddSoftCatalogoAsync(Guid catalogoId, Guid softwareId)
-	{
-		var catalogo = await _CatalogoRepository.GetByIdAsync(catalogoId);
-		var software = await _SoftwareRepository.GetByIdAsync(softwareId);
-
-		if (catalogo == null) return Result.Failure(new[] { "Catalogo não encontrado." });
-		if (software == null) return Result.Failure(new[] { "Software não encontrado." });
-
-		await _CatalogoRepository.AddSoftCatalogoAsync(catalogoId, softwareId);
-		return Result.Success();
-	}
-
-	// public async Task<Result> DeleteSoftCatalogoAsync(Guid id)
-	// {
-	// 	var catalogo = await _repository.GetByIdAsync(id);
-	// 	if (catalogo == null)
-	// 	{
-	// 		return Result.Failure(new List<string> { "Catalogo não encontrada." });
-	// 	}
-
-	// 	await _repository.UpdateAsync(catalogo);
-	// 	return Result.Success();
-	// }
-	public async Task<Result> DeleteSoftCatalogoAsync(Guid catalogoId, Guid softwareId)
-	{
-		// Validações podem ser feitas aqui ou no repositório
-		await _CatalogoRepository.DeleteSoftCatalogoAsync(catalogoId, softwareId);
-		return Result.Success();
-	}
-
 	private CatalogoDto MapToDTO(Catalogo catalogo)
 	{
 		return new CatalogoDto
@@ -209,10 +155,7 @@ public class CatalogoService : ICatalogoService
 			HelixSubcategoria = catalogo.HelixSubcategoria,
 			CatalogoEquipe = catalogo.CatalogoEquipe,
 			Ativo = catalogo.Ativo,
-			Observacao = catalogo.Observacao,
-			Softwares = catalogo.Software? // Mapeia softwares para serem carregados
-				.Select(f => new SoftwareDto { Id = f.Id, Nome = f.Nome, Situacao = f.Situacao })
-				.ToList()
+			Observacao = catalogo.Observacao
 		};
 	}
 }

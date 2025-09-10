@@ -78,8 +78,7 @@ public class ContratoService : IContratoService
 			Ativo = dto.Ativo,
 			Inicio = dto.Inicio,
 			Fim = dto.Fim,
-			AreaGestora = dto.AreaGestora,
-			Gerencia = dto.Gerencia
+			AreaGestora = dto.AreaGestora
 
 		};
 		contrato.Fornecedor ??= new List<Fornecedor>();
@@ -123,7 +122,7 @@ public class ContratoService : IContratoService
 		contrato.Inicio = dto.Inicio;
 		contrato.Fim = dto.Fim;
 		contrato.AreaGestora = dto.AreaGestora;
-		contrato.Gerencia = dto.Gerencia;
+		// contrato.Gerencia = dto.Gerencia;
 
 		// Atualizar contratos (exemplo simples: substitui todas)
 		if (dto.FornecedorIds != null)
@@ -189,7 +188,6 @@ public class ContratoService : IContratoService
 			Inicio = contrato.Inicio,
 			Fim = contrato.Fim,
 			AreaGestora = contrato.AreaGestora,
-			Gerencia = contrato.Gerencia,
 			Fornecedores = contrato.Fornecedor? // Mapeia contratos para serem carregados
 				.Select(f => new FornecedorDto { Id = f.Id, Nome = f.Nome, CPFCNPJ = f.CPFCNPJ })
 				.ToList()
