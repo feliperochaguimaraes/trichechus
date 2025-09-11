@@ -22,6 +22,7 @@ namespace Trichechus.Application.Mappings
 			CreateMap<Software, SoftwareDto>().ReverseMap();
 			CreateMap<Tarefa, TarefaDto>().ReverseMap();
 			CreateMap<Usuario, UsuarioDto>().ReverseMap();
+			CreateMap<Gerencia, GerenciaDto>().ReverseMap();
 		}
 	}
 }

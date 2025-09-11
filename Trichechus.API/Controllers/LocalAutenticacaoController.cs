@@ -15,6 +15,11 @@ public class LocalAutenticacaoController : ControllerBase
 {
 	private readonly ILocalAutenticacaoService _localAutenticacaoService;
 
+	public LocalAutenticacaoController(ILocalAutenticacaoService localAutenticacaoService)
+	{
+		_localAutenticacaoService = localAutenticacaoService;
+	}
+
 	[HttpGet("ambiente")]
 	public IActionResult GetAmbiente()
 	{
@@ -26,11 +31,6 @@ public class LocalAutenticacaoController : ControllerBase
 			ambiente
 		});
 	}
-	public LocalAutenticacaoController(ILocalAutenticacaoService localAutenticacaoService)
-	{
-		_localAutenticacaoService = localAutenticacaoService;
-	}
-
 	/// <summary>
 	/// Registra um novo usuário localmente no Trichechus
 	/// </summary>

@@ -33,6 +33,10 @@ public class UsuarioService : IUsuarioService
 	{
 		var usuarios = await _usuarioRepository.GetAllAsync();
 		return usuarios.Select(t => MapToDto(t));
+
+		// var usuarios = await _usuarioRepository.GetAllAsync();
+		// var dto = MapToDto(usuario);
+		// return Result<UsuarioDto>.Success(dto);
 	}
 
 	public async Task<Result<UsuarioDto>> CreateAsync(CreateUsuarioDto dto)
@@ -47,7 +51,7 @@ public class UsuarioService : IUsuarioService
 			Nome = dto.Nome,
 			Email = dto.Email,
 			Matricula = dto.Matricula,
-			// SenhaHash = dto.SenhaHash,
+			GerenciaId = dto.GerenciaId,
 			SenhaHash = BC.HashPassword(dto.SenhaHash),
 			Ativo = dto.Ativo,
 			CriadoEm = dto.CriadoEm,
@@ -87,7 +91,7 @@ public class UsuarioService : IUsuarioService
 
 		usuario.Nome = dto.Nome;
 		usuario.Email = dto.Email;
-		// usuario.Equipe = dto.Equipe;
+		usuario.GerenciaId = dto.GerenciaId;
 		usuario.Matricula = dto.Matricula;
 		usuario.SenhaHash = BC.HashPassword(dto.SenhaHash);
 		usuario.Ativo = dto.Ativo;
@@ -140,7 +144,8 @@ public class UsuarioService : IUsuarioService
 			Id = usuario.Id,
 			Nome = usuario.Nome,
 			Email = usuario.Email,
-			// Equipe = usuario.Equipe,
+			NomeGerencia = usuario.Gerencia.NomeGerencia,
+			SuperintendenciaNome = usuario.Gerencia.Superintendencia,
 			Matricula = usuario.Matricula,
 			SenhaHash = BC.HashPassword(usuario.SenhaHash),
 			Ativo = usuario.Ativo,

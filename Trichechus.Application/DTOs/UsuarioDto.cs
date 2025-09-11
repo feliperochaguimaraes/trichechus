@@ -54,7 +54,9 @@ public class UsuarioDto
 	public Guid Id { get; set; }
 	public string Nome { get; set; } = default!;
 	public string Email { get; set; } = default!;
-	public string Equipe { get; set; } = default!;
+	// public string Equipe { get; set; } = default!;
+	public string NomeGerencia { get; set; } = default!;
+	public string SuperintendenciaNome { get; set; } = default!;
 	public string Matricula { get; set; } = default!;
 	public string SenhaHash { get; set; } = default!;
 	public bool Ativo { get; set; } = true;
@@ -74,7 +76,7 @@ public class CreateUsuarioDto
 	[StringLength(200)]
 	public string Email { get; set; } = default!;
 
-	public string Equipe { get; set; } = default!;
+	public Guid GerenciaId { get; set; } = default!;
 	public string Matricula { get; set; } = default!;
 
 	[Required(ErrorMessage = "A senha é obrigatória")]
@@ -104,8 +106,7 @@ public class UpdateUsuarioDto
 	[StringLength(200)]
 	public string Email { get; set; } = default!;
 
-	public string Equipe { get; set; } = default!;
-
+	public Guid GerenciaId { get; set; } = default!;
 	public string Matricula { get; set; } = default!;
 
 	[Required(ErrorMessage = "A senha é obrigatória")]

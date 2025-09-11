@@ -22,7 +22,7 @@ public class TrichechusDbContext : DbContext
 	public DbSet<Tarefa> Tarefa => Set<Tarefa>();
 	public DbSet<URL> URL => Set<URL>();
 	public DbSet<Usuario> Usuario => Set<Usuario>();
-
+	public DbSet<Gerencia> Gerencia => Set<Gerencia>();
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

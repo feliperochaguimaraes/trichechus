@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Trichechus.Infrastructure.Context;
 
@@ -10,9 +11,11 @@ using Trichechus.Infrastructure.Context;
 namespace Trichechus.Infrastructure.Migrations
 {
     [DbContext(typeof(TrichechusDbContext))]
-    partial class TrichechusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250911120812_AjusteGerencia1")]
+    partial class AjusteGerencia1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.15");

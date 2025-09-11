@@ -63,6 +63,7 @@ builder.Services.AddScoped<IRepositorioRepository, RepositorioRepository>();
 builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
 builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
 builder.Services.AddScoped<IURLRepository, URLRepository>();
+builder.Services.AddScoped<IGerenciaRepository, GerenciaRepository>();
 // Registrar Repositórios Locais
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
@@ -78,6 +79,7 @@ builder.Services.AddScoped<IRepositorioService, RepositorioService>();
 builder.Services.AddScoped<ISoftwareService, SoftwareService>();
 builder.Services.AddScoped<ITarefaService, TarefaService>();
 builder.Services.AddScoped<IURLService, URLService>();
+builder.Services.AddScoped<IGerenciaService, GerenciaService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ILocalAutenticacaoService, LocalAutenticacaoService>();
 builder.Services.AddScoped<ISGAAutenticacaoService, SGAAutenticacaoService>(); // Serviço de autenticação SGA

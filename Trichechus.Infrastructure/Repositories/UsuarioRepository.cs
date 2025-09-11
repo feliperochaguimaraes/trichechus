@@ -25,13 +25,14 @@ public class UsuarioRepository : IUsuarioRepository
 	public async Task<Usuario> GetByIdWithPerfilAsync(Guid id)
 	{
 		return await _context.Usuario
+			.Include(u => u.Gerencia)
 			.Include(u => u.Perfil) // Inclui perfis associados
 									//.ThenInclude(p => p.Funcionalidades) // Inclui funcionalidades dentro dos perfis
 			.FirstOrDefaultAsync(u => u.Id == id);
 	}
 	public async Task<IEnumerable<Usuario>> GetAllAsync()
 	{
-		return await _context.Usuario.ToListAsync();
+		return await _context.Usuario.Include(u => u.Gerencia).ToListAsync();
 	}
 
 	public async Task<Usuario> GetByEmailAsync(string email)
